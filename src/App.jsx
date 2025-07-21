@@ -4,9 +4,10 @@ import { useState } from "react";
 import Navbar from "./Layout/Navbar";
 import Sidebar from "./Layout/Sidebar";
 import Login from "./Auth/Login";
-import AdminDashboard from "./Component/AdminDashboard/AdminDashboard";
-import StaffDashboard from "./Component/StaffDashboard/StaffDashboard";
-import UserDashboard from "./Component/UserDashboard/UserDashboard";
+import StaffManagement from "./Component/AdminDashboard/StaffManagement/StaffManagement";
+import TablesManagement from "./Component/StaffDashboard/TablesManagement/TablesManagement";
+import User from "./Component/UserDashboard/User";
+
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -56,9 +57,8 @@ function App() {
                 <Route path="/admin/*" element={
                   <ProtectedRoute allowedRoles={["Admin"]}>
                     <Routes>
-                      <Route path="dashboard" element={<AdminDashboard />} />
-                      <Route path="staff" element={<StaffManagement />} />
-                      <Route path="users" element={<UserManagement />} />
+                      <Route path="staffmanagement" element={<StaffManagement />} />
+                  
                       {/* Add more admin routes */}
                     </Routes>
                   </ProtectedRoute>
@@ -68,8 +68,8 @@ function App() {
                 <Route path="/staff/*" element={
                   <ProtectedRoute allowedRoles={["Staff"]}>
                     <Routes>
-                      <Route path="dashboard" element={<StaffDashboard />} />
-                      <Route path="tasks" element={<StaffTasks />} />
+                      <Route path="tablesmanagement" element={<TablesManagement />} />
+                      
                       {/* Add more staff routes */}
                     </Routes>
                   </ProtectedRoute>
@@ -79,8 +79,8 @@ function App() {
                 <Route path="/user/*" element={
                   <ProtectedRoute allowedRoles={["User"]}>
                     <Routes>
-                      <Route path="dashboard" element={<UserDashboard />} />
-                      <Route path="profile" element={<UserProfile />} />
+                      <Route path="users" element={<User />} />
+                      
                       {/* Add more user routes */}
                     </Routes>
                   </ProtectedRoute>

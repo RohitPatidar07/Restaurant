@@ -21,7 +21,7 @@ const Sidebar = ({ collapsed }) => {
 
   // Define menu items based on roles
   const adminMenuItems = [
-    { name: "Dashboard", path: "/admin/dashboard", icon: faHome },
+    { name: "Dashboard", path: "/admin/staffmenegement", icon: faHome },
     { name: "Staff Management", path: "/admin/staff", icon: faUserGear },
     { name: "User Management", path: "/admin/users", icon: faUsers },
     { name: "Reports", path: "/admin/reports", icon: faFileAlt },
@@ -29,13 +29,13 @@ const Sidebar = ({ collapsed }) => {
   ];
 
   const staffMenuItems = [
-    { name: "Dashboard", path: "/staff/dashboard", icon: faHome },
+    { name: "Dashboard", path: "/staff/tablesmanagement", icon: faHome },
     { name: "Tasks", path: "/staff/tasks", icon: faBriefcase },
     { name: "Reports", path: "/staff/reports", icon: faFileAlt },
   ];
 
   const userMenuItems = [
-    { name: "Dashboard", path: "/user/dashboard", icon: faHome },
+    { name: "Dashboard", path: "/user/users", icon: faHome },
     { name: "Profile", path: "/user/profile", icon: faUser },
   ];
 

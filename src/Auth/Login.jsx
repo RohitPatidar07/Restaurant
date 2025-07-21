@@ -55,8 +55,6 @@ const Login = () => {
           localStorage.removeItem("rememberedEmail");
         }
 
-        toast.success("Login Successful!");
-        
         // Redirect based on role
         setTimeout(() => {
           switch(user.role) {
@@ -77,7 +75,7 @@ const Login = () => {
         throw new Error("Invalid credentials or role");
       }
     } catch (error) {
-      toast.error(error.message || "Login failed. Please try again.");
+    //   toast.error(error.message || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -247,18 +245,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+
     </div>
   );
 };
