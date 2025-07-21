@@ -92,3 +92,18 @@
 }
 
 /* navbar end  */
+.menu-icon {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+/* For collapsed state */
+.sidebar-container.collapsed .menu-icon {
+  margin-right: 0;
+  font-size: 1.2rem;
+}
+
+.sidebar-container.collapsed .menu-text {
+  display: none;
+}

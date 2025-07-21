@@ -15,12 +15,12 @@ const Navbar = ({ toggleSidebar }) => {
 
   return (
     <>
-      <nav className="navbar sticky-top position-sticky navbar-dark  px-4 py-2 d-flex justify-content-between align-items-center border-bottom border-secondary">
+      <nav className="navbar sticky-top position-sticky  px-4 py-2 d-flex justify-content-between align-items-center shadow-sm">
         {/* Left: Logo & Title */}
         <div className="d-flex align-items-center">
           <Link to="/" className="navbar-brand d-flex flex-column">
             <span className="fw-bold text-warning" style={{ fontSize: '1.5rem' }}>logo</span>
-            <small className="text-light">Game Center Dashboard</small>
+            
           </Link>
           <button
             className="btn btn-outline-light d-lg-none ms-3"
@@ -43,7 +43,7 @@ const Navbar = ({ toggleSidebar }) => {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <i className="bi bi-bell fs-5 text-dark bg-white rounded-circle p-2"></i>
+              <i className="bi bi-bell fs-5 text-dark bg-white rounded-circle p-1 px-2"></i>
             </button>
             <ul className="dropdown-menu dropdown-menu-end shadow-sm mt-2">
               <li>
