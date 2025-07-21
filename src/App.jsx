@@ -1,15 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
 import Sidebar from './Layout/Sidebar'
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <>
+<<<<<<< HEAD
       <Sidebar/>
+=======
+
+>>>>>>> dd79f9bca0a89548f7af232714771d2340d3ae7d
     </>
   )
 }
