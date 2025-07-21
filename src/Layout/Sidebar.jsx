@@ -1,25 +1,64 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faUserGear, 
+  faCartShopping, 
+  faPrint, 
+  faBriefcase, 
+  faUser, 
+  faChartBar,
+  faHome,
+  faUsers,
+  faFileAlt
+} from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
 const Sidebar = ({ collapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const role = localStorage.getItem("role");
 
-const menuItems = [
-  { name: "Staff Management", path: "/", icon: "fa-solid fa-user-gear" },
-  { name: "Table & Plug Setup", path: "/table-plug-setup", icon: "fa-solid fa-cart-shopping" },
-  { name: "Printer Setup", path: "/printer-setup", icon: "fa-solid fa-print" },
-  { name: "Business Settings", path: "/business-settings", icon: "fa-solid fa-briefcase" },
-  { name: "Reports", path: "/reports", icon: "fa-solid fa-user" },
-  { name: "Device Monitor", path: "/device-monitor", icon: "fa-solid fa-chart-bar" },
-];
+  // Define menu items based on roles
+  const adminMenuItems = [
+    { name: "Dashboard", path: "/admin/dashboard", icon: faHome },
+    { name: "Staff Management", path: "/admin/staff", icon: faUserGear },
+    { name: "User Management", path: "/admin/users", icon: faUsers },
+    { name: "Reports", path: "/admin/reports", icon: faFileAlt },
+    { name: "Settings", path: "/admin/settings", icon: faBriefcase },
+  ];
 
+  const staffMenuItems = [
+    { name: "Dashboard", path: "/staff/dashboard", icon: faHome },
+    { name: "Tasks", path: "/staff/tasks", icon: faBriefcase },
+    { name: "Reports", path: "/staff/reports", icon: faFileAlt },
+  ];
+
+  const userMenuItems = [
+    { name: "Dashboard", path: "/user/dashboard", icon: faHome },
+    { name: "Profile", path: "/user/profile", icon: faUser },
+  ];
+
+  // Get menu items based on role
+  const getMenuItems = () => {
+    switch(role) {
+      case "Admin":
+        return adminMenuItems;
+      case "Staff":
+        return staffMenuItems;
+      case "User":
+        return userMenuItems;
+      default:
+        return [];
+    }
+  };
+
+  const menuItems = getMenuItems();
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className={`sidebar-container ${collapsed ? "collapsed" : ""}`}>
+    <div className={`sidebar-container shadow-sm ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar">
         <ul className="menu">
           {menuItems.map((item, index) => (
@@ -32,8 +71,8 @@ const menuItems = [
                 className="menu-link"
                 onClick={() => navigate(item.path)}
               >
-                <i className={item.icon}></i>
-                <span className="menu-text">{item.name}</span>
+                <FontAwesomeIcon icon={item.icon} className="menu-icon" />
+                {!collapsed && <span className="menu-text">{item.name}</span>}
               </div>
             </li>
           ))}
