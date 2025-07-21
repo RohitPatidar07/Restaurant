@@ -1,5 +1,9 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
+import StaffManagement from "./Component/AdminDashboard/StaffManagement/StaffManagement";
+import { useState } from "react";
+import Navbar from "./Layout/Navbar";
+import Sidebar from "./Layout/Sidebar";
 
 
 
@@ -12,7 +16,7 @@ function App() {
     setIsSidebarCollapsed((prev) => !prev);
   };
   const location = useLocation();
-  const hideLayout = location.pathname === "/" || location.pathname === "/electricalproducts"  || location.pathname === "/contactus" || location.pathname === "/profilepage" || location.pathname === "/productpage" || location.pathname === "/shoppingcart" || location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/aboutus" || location.pathname === "/privacypolicy" || location.pathname === "/terms" || location.pathname === "/refund" || location.pathname.startsWith("/productpage" );
+  const hideLayout = location.pathname === "/hfjsf" || location.pathname === "/electricalproducts"  || location.pathname === "/contactus" || location.pathname === "/profilepage" || location.pathname === "/productpage" || location.pathname === "/shoppingcart" || location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/aboutus" || location.pathname === "/privacypolicy" || location.pathname === "/terms" || location.pathname === "/refund" || location.pathname.startsWith("/productpage" );
 
   return (
     <>
@@ -35,7 +39,7 @@ function App() {
                 }`}
             >
               <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" element={<StaffManagement />} />
               </Routes>
             </div>
           </div>

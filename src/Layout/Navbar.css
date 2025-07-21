@@ -1,0 +1,94 @@
+/* navbar start */
+.navbar {
+  height: 75px;
+  
+  position: fixed;
+  z-index: 5;
+   background: #1f2937; /* dark background as in image */
+  width: 100%;
+}
+
+.nav-conte {
+  margin: 0px 30px;
+}
+
+.nav-brand {
+  color: black;
+  line-height: 54.46px;
+  font-size: 45px;
+  font-weight: 700;
+  font-family: inter;
+}
+
+@media (max-width: 768px) {
+  .nav-brand {
+    font-size: 23px;
+  }
+
+  .nav-taggle-icon {
+    margin-left: 15px !important;
+  }
+
+  .nav-conte {
+    margin: 0 20px;
+  }
+}
+
+.nav-brand:hover {
+  color: rgb(181, 248, 186);
+}
+
+.nav-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-bran {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.nav-taggle-icon {
+  margin-left: 35px;
+  font-size: 24px;
+}
+
+.nav-taggle-icon a {
+  color: black;
+}
+
+.nav-taggle-icon a:hover {
+  color: rgb(181, 248, 186);
+}
+
+.nav-main-icon {
+  font-size: 24px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-main-icon i {
+  margin: 15px;
+}
+
+.bell-icon {
+  color: black;
+}
+
+.bell-icon:hover {
+  color: #949494;
+}
+
+.user-icon {
+  color: black;
+}
+
+.user-icon:hover {
+  color: #578E7E;
+}
+
+/* navbar end  */

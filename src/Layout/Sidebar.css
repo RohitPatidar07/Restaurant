@@ -4,10 +4,10 @@
 .sidebar-container {
   width: 240px;
   background: #1f2937; /* dark background as in image */
-  height: 89vh;
+  height: 100vh;
   overflow-y: auto;
   transition: width 0.3s ease;
-  margin-top: 75px;
+
   z-index: 1;
   position: fixed;
   scrollbar-width: none;

@@ -1,52 +1,63 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import './Navbar.css'
 
 const Navbar = ({ toggleSidebar }) => {
-  const navigate = useNavigate();
-  // ✅ Extract user data from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userRole = user?.role || "admin"; // fallback if role is undefined
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
+  // Live clock
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
-      <nav className="navbar navbar-white bg-white shadow-sm border">
-        <div className="container-fluid d-flex justify-content-between align-items-center">
-          {/* Left: Logo + Toggle */}
-          <div className="d-flex align-items-center gap-3">
+      <nav className="navbar sticky-top position-sticky navbar-dark  px-4 py-2 d-flex justify-content-between align-items-center border-bottom border-secondary">
+        {/* Left: Logo & Title */}
+        <div className="d-flex align-items-center">
+          <Link to="/" className="navbar-brand d-flex flex-column">
+            <span className="fw-bold text-warning" style={{ fontSize: '1.5rem' }}>logo</span>
+            <small className="text-light">Game Center Dashboard</small>
+          </Link>
+          <button
+            className="btn btn-outline-light d-lg-none ms-3"
+            onClick={toggleSidebar}
+          >
+            <i className="bi bi-list fs-4"></i>
+          </button>
+        </div>
 
-           <Link to="/">
-            <img  height={60}   width={80}
-              src="https://i.postimg.cc/zXVchZ1Z/2-removebg-preview-1.png" alt="Logo" />
-           </Link>
-            <button   className="btn btn-outline-secondary d-lg-none"    onClick={toggleSidebar} >
-              <i className="bi bi-list fs-4"></i>
-            </button>
+        {/* Right: Time & Icon */}
+        <div className="d-flex align-items-center gap-4">
+          <div className="text-end text-light">
+            <div className="small">Current Time</div>
+            <div className="fw-bold">{currentTime}</div>
           </div>
-          <div className="d-flex align-items-center gap-3">
-           <span className="fw-bold"> 👋  Hi,{userRole}</span>
-            <div className="dropdown">
-              <button  className="btn d-flex align-items-center gap-2 p-0 border-0 bg-transparent " data-bs-toggle="dropdown"
-                aria-expanded="false" >
-                <i className="bi bi-person fs-3 text-secondary"></i>  
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end shadow-sm mt-2">
-                <li>
-                  <Link to="/Admin-Profile" className="dropdown-item">
-                    My Profile
-                  </Link>
-                </li>
-                <li><hr className="dropdown-divider" /></li>
-                <li>
-                  <button className="dropdown-item" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
+
+          <div className="dropdown">
+            <button
+              className="btn d-flex align-items-center gap-2 p-0 border-0 bg-transparent text-light"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i className="bi bi-bell fs-5 text-dark bg-white rounded-circle p-2"></i>
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end shadow-sm mt-2">
+              <li>
+                <Link to="#" className="dropdown-item">
+                  My Profile
+                </Link>
+              </li>
+              <li><hr className="dropdown-divider" /></li>
+              <li>
+                <button className="dropdown-item">
+                  Logout
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>

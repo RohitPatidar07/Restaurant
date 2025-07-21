@@ -6,19 +6,15 @@ const Sidebar = ({ collapsed }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuItems = [
-    { name: "Dashboard", path: "/admin/dashboard", icon: "fa-solid fa-gauge" },
-    { name: "Categories", path: "/categories", icon: "fa-solid fa-list" },
-    { name: "Add Products", path: "/addproducts", icon: "fa-solid fa-plus" },
-    { name: "Products List", path: "/products", icon: "fa-solid fa-boxes-stacked" },
-    { name: "All Orders", path: "/orders", icon: "fa-solid fa-cart-shopping" },
-    { name: "Manage Users", path: "/users", icon: "fa-solid fa-users" },
-    { name: "Manage Inventory", path: "/inventory", icon: "fa-solid fa-warehouse" },
-    { name: "Manage Banner", path: "/bannermanager", icon: "fa-solid fa-image" },
-    { name: "Report Analytics", path: "/reportanalytics", icon: "fa-solid fa-chart-line" },
-    { name: "Support", path: "/support", icon: "fa-solid fa-headset" },
-    // { name: "Setting", path: "/settings", icon: "fa-solid fa-gear" }
-  ];
+const menuItems = [
+  { name: "Staff Management", path: "/", icon: "fa-solid fa-user-gear" },
+  { name: "Table & Plug Setup", path: "/table-plug-setup", icon: "fa-solid fa-cart-shopping" },
+  { name: "Printer Setup", path: "/printer-setup", icon: "fa-solid fa-print" },
+  { name: "Business Settings", path: "/business-settings", icon: "fa-solid fa-briefcase" },
+  { name: "Reports", path: "/reports", icon: "fa-solid fa-user" },
+  { name: "Device Monitor", path: "/device-monitor", icon: "fa-solid fa-chart-bar" },
+];
+
 
   const isActive = (path) => location.pathname === path;
 
