@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  RiGamepadLine, 
-  RiBilliardsLine, 
-  RiRestaurantLine, 
-  RiTvLine, 
-  RiLightbulbLine, 
+import {
+  RiGamepadLine,
+  RiBilliardsLine,
+  RiRestaurantLine,
+  RiTvLine,
+  RiLightbulbLine,
   RiMusicLine,
   RiRefreshLine,
   RiSearchLine,
@@ -116,11 +116,11 @@ const DeviceMonitor = () => {
       if (device.id === deviceId) {
         const newPowerState = device.powerState === 'on' ? 'off' : 'on';
         const message = `${device.name} has been turned ${newPowerState.toUpperCase()}`;
-        
+
         setToastMessage(message);
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
-        
+
         return {
           ...device,
           powerState: newPowerState
@@ -173,16 +173,16 @@ const DeviceMonitor = () => {
           <div className="d-flex flex-wrap gap-3 mb-3 mb-md-0">
             <div className="position-relative">
               <RiSearchLine className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
-              <input 
-                type="text" 
-                placeholder="Search devices..." 
-                className="form-control ps-5" 
+              <input
+                type="text"
+                placeholder="Search devices..."
+                className="form-control ps-5"
               />
             </div>
             <div className="dropdown">
-              <button 
-                className="btn btn-outline-secondary dropdown-toggle d-flex align-items-center" 
-                type="button" 
+              <button
+                className="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+                type="button"
                 data-bs-toggle="dropdown"
               >
                 <RiFilterLine className="me-2" />
@@ -216,7 +216,7 @@ const DeviceMonitor = () => {
                         {device.icon}
                       </div>
                       <div>
-                        <h3 className="fw-bold mb-1">{device.name}</h3>
+                        <h6 className="fw-bold mb-1">{device.name}</h6>
                         <p className="text-muted small mb-0">{device.location}</p>
                       </div>
                     </div>
@@ -229,7 +229,7 @@ const DeviceMonitor = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="mb-4">
                     <div className="d-flex justify-content-between small text-muted mb-2">
                       <span>Power Consumption</span>
@@ -238,37 +238,37 @@ const DeviceMonitor = () => {
                       </span>
                     </div>
                     <div className="progress" style={{ height: '6px' }}>
-                      <div 
+                      <div
                         className={`progress-bar ${device.powerState === 'on' ? 'bg-warning' : 'bg-secondary'}`}
-                        style={{ 
-                          width: `${device.powerConsumption ? Math.min(device.powerConsumption / 2, 100) : 0}%` 
+                        style={{
+                          width: `${device.powerConsumption ? Math.min(device.powerConsumption / 2, 100) : 0}%`
                         }}
                       ></div>
                     </div>
                   </div>
-                  
+
                   <div className="d-flex justify-content-between align-items-center">
                     <div className={`small ${device.status === 'offline' ? 'text-danger' : 'text-muted'}`}>
                       {device.status === 'offline' ? 'Last seen: ' : 'Updated: '}
                       {device.lastUpdated}
                     </div>
                     <div className="d-flex gap-2">
-                      <div 
+                      <div
                         className={`device-toggle-switch position-relative rounded-pill ${device.powerState === 'on' ? 'bg-warning' : 'bg-dark'} ${device.status === 'offline' ? 'opacity-50' : ''}`}
                         onClick={() => device.status === 'online' && toggleDevice(device.id)}
                         style={{ width: '48px', height: '24px', cursor: device.status === 'offline' ? 'not-allowed' : 'pointer' }}
                       >
-                        <div 
+                        <div
                           className="position-absolute top-1 start-1 bg-white rounded-circle shadow-sm"
-                          style={{ 
-                            width: '20px', 
+                          style={{
+                            width: '20px',
                             height: '20px',
                             transform: device.powerState === 'on' ? 'translateX(24px)' : 'translateX(0)',
                             transition: 'transform 0.3s ease'
                           }}
                         ></div>
                       </div>
-                      <button 
+                      <button
                         className={`btn btn-sm ${device.status === 'offline' ? 'btn-outline-secondary disabled' : 'btn-outline-dark'}`}
                         onClick={() => device.status === 'online' && showOverrideModal(device)}
                         disabled={device.status === 'offline'}
@@ -298,13 +298,13 @@ const DeviceMonitor = () => {
               Are you sure you want to manually override the power state for <strong>{currentDevice?.name}</strong>? This action will bypass automated controls.
             </p>
             <div className="d-flex justify-content-end gap-3">
-              <button 
+              <button
                 className="btn btn-outline-secondary"
                 onClick={() => setShowModal(false)}
               >
                 Cancel
               </button>
-              <button 
+              <button
                 className="btn btn-danger"
                 onClick={confirmOverride}
               >
@@ -317,9 +317,9 @@ const DeviceMonitor = () => {
 
       {/* Success Toast */}
       {showToast && (
-        <div 
-          className="position-fixed top-4 end-4 bg-success text-white px-4 py-3 rounded-3 shadow d-flex align-items-center"
-          style={{ zIndex: 1050, animation: 'slideIn 0.3s forwards' }}
+        <div
+          className="bg-success text-white px-4 py-3 rounded-3 shadow d-flex align-items-center"
+        
         >
           <RiCheckLine className="me-2" />
           <span>{toastMessage}</span>
