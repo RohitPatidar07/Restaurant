@@ -31,15 +31,6 @@ li {
   list-style-type: none;
 }
 
-/* login */
-main {
-  position: fixed;
-  top: 61px;
-  left: 535px;
-  width: 100vh;
-  /* height: 100vh; */
-}
-
 @media (min-width: 320px) and  (max-width: 365px) {
   main {
     top: -30px;

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 // import 'react-toastify/dist/ReactToastify.css';
 import { Link } from "react-router-dom";
 
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
@@ -59,13 +60,13 @@ const Login = () => {
         setTimeout(() => {
           switch(user.role) {
             case "Admin":
-              navigate("/admin/dashboard");
+              navigate("/admin/staffmanagement");
               break;
             case "Staff":
-              navigate("/staff/dashboard");
+              navigate("/staff/tablesmanagement");
               break;
             case "User":
-              navigate("/user/dashboard");
+              navigate("/user/booktable");
               break;
             default:
               navigate("/");

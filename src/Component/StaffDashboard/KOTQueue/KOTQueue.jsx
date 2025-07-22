@@ -88,27 +88,22 @@ const KOTQueue = () => {
     };
 
     return (
-        <div className="kot-dashboard-container d-flex min-vh-100" style={{ backgroundColor: '#f5f5f5' }}>
-
-
+        <div className=''>
             {/* Main Content */}
-            <main className="kot-main-content flex-grow-1 overflow-auto">
+            <main className="">
                 {/* Header */}
-                <header className="kot-header bg-white shadow-sm border-bottom border-light p-4">
-                    <div className="kot-header-container d-flex justify-content-between align-items-center">
-                        <div className="kot-header-title d-flex align-items-center gap-3">
-                            <div className="kot-header-icon">
-                                <RiPrinterFill className="text-warning fs-4" />
-                            </div>
+                <header className="p-4">
+                    <div className=" d-flex justify-content-between align-items-center">
+                        <div className="d-flex align-items-center gap-3">
                             <div>
-                                <h1 className="kot-header-main-title text-dark fs-3 fw-bold">KOT Queue Management</h1>
-                                <p className="kot-header-subtitle text-muted small">Monitor and manage kitchen order tickets</p>
+                                <h1 className="fs-3 fw-bold text-dark">KOT Queue Management</h1>
+                                <p className="text-muted small">Monitor and manage kitchen order tickets</p>
                             </div>
                         </div>
 
-                        <div className="kot-header-actions d-flex align-items-center gap-3">
+                        <div className="d-flex align-items-center gap-3">
                             <div className="kot-update-status d-flex align-items-center gap-2 small text-muted">
-                                <div className="kot-status-indicator bg-success rounded-circle" style={{ width: '8px', height: '8px' }}></div>
+                                <div className="kot-status-indicator bg-success rounded-circle"></div>
                                 <span>{formatLastUpdated()}</span>
                             </div>
                             <button className="kot-refresh-btn btn btn-warning text-dark rounded-1 fw-medium d-flex align-items-center">
@@ -194,8 +189,8 @@ const KOTQueue = () => {
                                                     </td>
                                                     <td className="kot-table-td px-4 py-3">
                                                         <span className={`kot-category-badge d-inline-flex align-items-center px-2 py-1 rounded-pill small fw-medium ${kot.category === 'Food' ? 'bg-orange-100 text-orange-800' :
-                                                                kot.category === 'Beverages' ? 'bg-blue-100 text-blue-800' :
-                                                                    'bg-purple-100 text-purple-800'
+                                                            kot.category === 'Beverages' ? 'bg-blue-100 text-blue-800' :
+                                                                'bg-purple-100 text-purple-800'
                                                             }`}>
                                                             {kot.category === 'Food' && <RiRestaurantLine className="me-1" />}
                                                             {kot.category === 'Beverages' && <RiCupLine className="me-1" />}
@@ -204,7 +199,7 @@ const KOTQueue = () => {
                                                     </td>
                                                     <td className="kot-table-td px-4 py-3">
                                                         <div className={`kot-time-elapsed small fw-medium ${kot.timeElapsed === 'Completed' ? 'text-success' :
-                                                                kot.timeElapsed === '12 min' ? 'text-danger' : 'text-warning'
+                                                            kot.timeElapsed === '12 min' ? 'text-danger' : 'text-warning'
                                                             }`}>
                                                             {kot.timeElapsed}
                                                         </div>

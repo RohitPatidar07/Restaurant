@@ -148,7 +148,7 @@ const ReservationsManagement = () => {
       {/* Main Content */}
       <div className="flex-grow-1 p-4">
         <div className="mb-4">
-          <h1 className="h2 fw-bold">Reservations Management</h1>
+          <h1 className="fs-3 fw-bold text-dark">Reservations Management</h1>
           <p className="text-muted">Manage customer reservations and bookings</p>
         </div>
 

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'remixicon/fonts/remixicon.css';
 
 const AlertsNotifications = () => {
   const [notifications, setNotifications] = useState({
@@ -137,7 +135,7 @@ const AlertsNotifications = () => {
     <div className="container-fluid p-3 p-md-4" style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
       <style>{styles}</style>
       
-      <h1 className="mb-3 mb-md-4 text-start">Alerts & Notifications</h1>
+      <h1 className="fs-3 fw-bold text-dark">Alerts & Notifications</h1>
       <p className="text-muted mb-3 mb-md-4 text-start">Monitor table timeouts and reservation reminders in real-time</p>
 
       {/* Stats Cards - Responsive Grid */}

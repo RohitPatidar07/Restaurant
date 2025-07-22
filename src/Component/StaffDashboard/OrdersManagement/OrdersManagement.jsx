@@ -123,14 +123,14 @@ const OrdersManagement = () => {
   const { subtotal, tax, total } = calculateTotals();
 
   return (
-    <div className="d-flex vh-100 bg-light" style={{ overflowX: 'hidden' }}>
+    <div className="d-flex vh-100" style={{ overflowX: 'hidden' }}>
       {/* Main Content */}
       <div className="d-flex flex-column flex-grow-1 overflow-hidden">
         {/* Header */}
-        <div className="bg-white border-bottom p-3 p-md-4">
+        <div className="p-3">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
             <div className="mb-3 mb-md-0">
-              <h1 className="h4 h2-md fw-bold">Orders Management</h1>
+              <h1 className="fs-3 fw-bold text-dark">Orders Management</h1>
               <div className="d-flex align-items-center text-muted small">
                 <span>Dashboard</span>
                 <span className="mx-2">•</span>

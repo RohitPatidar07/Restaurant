@@ -186,14 +186,14 @@ const TablesManagement = () => {
     };
 
     return (
-        <div className="d-flex vh-100 bg-light">
+        <div className="">
             {/* Main Content */}
             <div className="d-flex flex-column flex-grow-1 overflow-hidden">
                 {/* Header */}
-                <header className="bg-white border-bottom p-3 p-md-4">
+                <header className="p-4">
                     <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div>
-                            <h1 className="h2 mb-1 fw-bold">Tables Management</h1>
+                            <h1 className="fs-3 fw-bold text-dark">Tables Management</h1>
                             <p className="mb-0 text-muted">Monitor and control all gaming tables</p>
                         </div>
                         <div className="d-flex align-items-center gap-3 gap-md-4">
@@ -209,7 +209,7 @@ const TablesManagement = () => {
                 </header>
 
                 {/* Filter Bar */}
-                <div className="bg-white border-bottom p-3 p-md-4">
+                <div className="bg-white border-bottom p-3">
                     <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div className="d-flex align-items-center gap-2 gap-md-3 flex-wrap">
                             {/* Table Type Filter */}
@@ -474,9 +474,6 @@ const TablesManagement = () => {
           }
         }
       `}</style>
-
-            {/* Google Fonts */}
-            <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
         </div>
     );
 };
