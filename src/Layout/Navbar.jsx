@@ -53,9 +53,11 @@ const Navbar = ({ toggleSidebar }) => {
               </li>
               <li><hr className="dropdown-divider" /></li>
               <li>
+              <Link to="/login">
                 <button className="dropdown-item">
                   Logout
                 </button>
+              </Link>
               </li>
             </ul>
           </div>

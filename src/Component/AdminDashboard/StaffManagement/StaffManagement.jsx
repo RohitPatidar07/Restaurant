@@ -13,7 +13,7 @@ const StaffManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState('');
-  const [staffMembers] = useState([
+  const [staffMembers] = useState([ 
     { id: 'sarah', name: 'Sarah Johnson', phone: '+1 (555) 123-4567', role: 'Admin', color: 'primary' },
     { id: 'michael', name: 'Michael Chen', phone: '+1 (555) 234-5678', role: 'Staff', color: 'success' },
     { id: 'emily', name: 'Emily Rodriguez', phone: '+1 (555) 345-6789', role: 'Manager', color: 'info' },
@@ -45,15 +45,14 @@ const StaffManagement = () => {
   };
 
   return (
-    <div className="d-flex">
-   
-
+    <div className="p-2">
+      <div className='mb-4'>
+         <h1 className='h2 fw-bold text-dark'>Staff Management</h1>
+      </div>
       {/* Main Content */}
       <div>
-    
-
         {/* Staff List */}
-        <Container fluid className="py-4">
+        <div className="">
           <Row className="g-4 mb-4">
             {staffMembers.map((staff) => (
               <Col key={staff.id} xs={12} md={6} lg={4}>
@@ -276,7 +275,7 @@ const StaffManagement = () => {
               </div>
             </Card.Body>
           </Card>
-        </Container>
+        </div>
       </div>
 
       {/* Add Staff Modal */}

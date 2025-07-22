@@ -91,12 +91,12 @@ function TabelPlugSetup() {
     };
 
     return (
-        <div className="bg-light">
-            <div className="d-flex">
+        <div className="">
+            <div className="">
                 {/* Main Content */}
-                <main className="w-100 p-4">
+                <main className="p-3">
                     <div className="mb-4">
-                        <h2 className="h2 fw-bold text-dark mb-2">Table & Plug Setup</h2>
+                        <h2 className="h2 fw-bold text-dark">Table & Plug Setup</h2>
                         <p className="text-muted">Manage table types, configure rates, and control smart plugs</p>
                     </div>
 
