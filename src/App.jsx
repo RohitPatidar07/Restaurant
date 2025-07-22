@@ -21,6 +21,8 @@ import MyBilling from "./Component/UserDashboard/MyBilling/MyBilling";
 import SessionTracker from "./Component/UserDashboard/SessionTracker/SessionTracker";
 import BookTable from "./Component/UserDashboard/BookTable/BookTable";
 import SessionHistory from "./Component/UserDashboard/SessionHistory/SessionHistory";
+import Signup from "./Auth/Signup";
+import ForgotPassword from "./Auth/ForgotPassword";
 
 
 function App() {
@@ -42,6 +44,7 @@ function App() {
     location.pathname === "/signup" ||
     location.pathname === "/forgot-password";
 
+
   // Protected route component
   const ProtectedRoute = ({ children, allowedRoles }) => {
     if (!role || !allowedRoles.includes(role)) {
@@ -55,6 +58,8 @@ function App() {
       {hideLayout ? (
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           {/* Add other auth routes here */}
         </Routes>
       ) : (

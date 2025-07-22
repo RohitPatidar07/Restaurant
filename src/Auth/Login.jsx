@@ -107,7 +107,8 @@ const Login = () => {
                 className="navbar-logo m-2"
                 style={{ height: "50px" }}
               />
-              <span className="navbar-title fs-3 fw-bold text-primary">KidiCloud</span>
+              <span className="navbar-title fs-3 fw-bold " style={{color:"#1f2937"}}>POS Light Control</span>
+
             </div>
 
             <h2 className="h5 text-secondary mt-3">Welcome Back!</h2>
@@ -193,7 +194,7 @@ const Login = () => {
                     Remember Me
                   </label>
                 </div>
-                <Link to="/forgot-password" className="text-info text-decoration-none">
+                <Link to="/forgot-password" className=" text-decoration-none" style={{color:"#1f2937"}}>
                   Forgot Password?
                 </Link>
               </div>
@@ -201,7 +202,7 @@ const Login = () => {
               {/* Login Button */}
               <button
                 type="submit"
-                className="btn btn-primary w-100 text-white fw-semibold mb-3"
+                className="btn btn-warning w-100 text-white fw-semibold mb-3"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -216,7 +217,7 @@ const Login = () => {
 
               <div className="text-center">
                 <span className="text-muted">Don't have an account? </span>
-                <Link to="/signup" className="text-info text-decoration-none fw-semibold">
+                <Link to="/signup" className=" text-decoration-none fw-semibold" style={{color:"#1f2937"}}>
                   Sign Up
                 </Link>
               </div>
@@ -227,7 +228,7 @@ const Login = () => {
           <div className="col-md-6 d-none d-md-block">
             <div className="h-100 position-relative">
               <img
-                src="https://i.postimg.cc/13jCyCb9/7a4d099a65d67ea8e5d8c1e30fb467b1.jpg"
+                src="https://i.postimg.cc/GpVFJDn8/create-image-for-resturant-and-game-zone-pool-for-login-page-right-side-image-do-not-write-anything.jpg"
                 alt="Childcare Illustration"
                 className="img-fluid h-100 w-100 object-fit-cover"
                 style={{
@@ -235,13 +236,7 @@ const Login = () => {
                   borderBottomRightRadius: "2rem",
                 }}
               />
-              <div
-                className="position-absolute top-0 start-0 w-100 h-100"
-                style={{
-                  background:
-                    "linear-gradient(to right, rgba(255,255,255,0.95), transparent)",
-                }}
-              ></div>
+            
             </div>
           </div>
         </div>
