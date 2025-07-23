@@ -92,7 +92,7 @@ const StaffManagement = () => {
           </div>
 
           <button
-            className="btn btn-warning d-flex align-items-center fw-semibold"
+            className="btn btn-warning d-flex align-items-center "
             style={{ whiteSpace: 'nowrap', gap: '0.5rem' }}
             onClick={handleShow}
           >

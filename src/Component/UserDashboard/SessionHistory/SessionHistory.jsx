@@ -147,7 +147,9 @@ const SessionHistory = () => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               {selectedTableType}
-              <RiArrowDownSLine className={`${isDropdownOpen ? "rotate-180" : ""}`} />
+              <RiArrowDownSLine
+                className={`${isDropdownOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
             {isDropdownOpen && (
@@ -179,7 +181,6 @@ const SessionHistory = () => {
           </div>
         </div>
       </div>
-
 
       {filteredSessions.length > 0 ? (
         <>
@@ -222,9 +223,9 @@ const SessionHistory = () => {
                     <div className="fw-semibold text-dark">{session.cost}</div>
                     <div>Total Cost</div>
                   </div>
-                  <button className="btn btn-link text-warning p-0 fw-semibold">
+                  {/* <button className="btn btn-link text-warning p-0 fw-semibold">
                     View Details
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -272,8 +273,10 @@ const SessionHistory = () => {
   .dropdown-item { width: 100%; text-align: left; padding: 0.5rem 1rem; border-bottom: 1px solid #f1f1f1; }
   .dropdown-item:last-child { border-bottom: none; }
 
-  .position-absolute {
-    z-index: 10;
+
+
+        .position-absolute {
+    z-index: 10;                
   }
       `}</style>
     </div>      

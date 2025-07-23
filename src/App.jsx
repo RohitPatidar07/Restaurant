@@ -23,6 +23,7 @@ import BookTable from "./Component/UserDashboard/BookTable/BookTable";
 import SessionHistory from "./Component/UserDashboard/SessionHistory/SessionHistory";
 import Signup from "./Auth/Signup";
 import ForgotPassword from "./Auth/ForgotPassword";
+import Profile from "./Profile/Profile";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -60,12 +61,13 @@ function App() {
 
   return (
     <>
-    
+
       {hideLayout ? (
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+         
         </Routes>
       ) : (
         <>
@@ -77,10 +79,22 @@ function App() {
             />
             <div className={`right-side-content ${isSidebarCollapsed ? "collapsed" : ""}`}>
               <Routes>
+
+
+                 {/* profile */}
+                        <Route path="/profile" element={<Profile />} />
+                      {/* profil end */}
+
+
+                      
                 {/* Admin Routes */}
                 <Route path="/admin/*" element={
                   <ProtectedRoute allowedRoles={["Admin"]}>
                     <Routes>
+
+                     
+
+                        
                       <Route path="staffmanagement" element={<StaffManagement />} />
                       <Route path="businesssettings" element={<BusinessSettings />} />
                       <Route path="devicemonitor" element={<DeviceMonitor />} />
