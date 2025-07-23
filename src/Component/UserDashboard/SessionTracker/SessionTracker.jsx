@@ -242,7 +242,7 @@ const SessionTracker = () => {
                                         <RiStopLine className="me-2" />
                                         End Session
                                     </button>
-                                  <Link to='/sessionhistory' className="text-decoration-none w-100 ">
+                                  <Link to='/user/sessionhistory' className="text-decoration-none w-100 ">
                                     <button className="btn btn-outline-secondary d-flex align-items-center justify-content-start py-2 w-100">
                                         <RiHistoryLine className="me-2" />
                                         Session History
