@@ -276,7 +276,7 @@ const SessionHistory = () => {
     z-index: 10;
   }
       `}</style>
-    </div>
+    </div>      
   );
 };
 
