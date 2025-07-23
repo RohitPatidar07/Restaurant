@@ -153,11 +153,11 @@ const BookTable = () => {
   };
 
   return (
-    <div className="">
+    <div className="p-3">
       {/* Main Content */}
       <div className="flex-grow-1 d-flex flex-column overflow-hidden">
         {/* Header */}
-        <header className="p-4">
+        <header className="">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
             <div>
               <h1 className="h2 fw-bold text-dark">Book a Table</h1>
@@ -173,107 +173,43 @@ const BookTable = () => {
               className="d-flex flex-wrap gap-3 justify-content-start justify-content-md-between"
               style={{ maxWidth: "100%" }}
             >
-              {/* Step 1 */}
-              <div
-                className={`d-flex align-items-center flex-shrink-0 ${
-                  currentStep > 1 ? "text-dark" : "text-muted"
-                }`}
-              >
+              {/* Step Component */}
+              {[
+                { step: 1, label: "Choose Type" },
+                { step: 2, label: "Select Time" },
+                { step: 3, label: "Enter Details" },
+                { step: 4, label: "Confirm" },
+              ].map((item, index, arr) => (
                 <div
-                  className={`rounded-circle d-flex align-items-center justify-content-center ${
-                    currentStep >= 1
-                      ? "bg-warning text-dark"
-                      : "bg-light text-muted"
-                  }`}
-                  style={{ width: "32px", height: "32px" }}
+                  key={item.step}
+                  className={`d-flex flex-column flex-lg-row align-items-center ${currentStep > item.step ? "text-dark" : "text-muted"
+                    }`}
                 >
-                  1
-                </div>
-                <span className="ms-2 small fw-medium">Choose Type</span>
-                <div
-                  className={`mx-2 ${
-                    currentStep > 1 ? "bg-warning" : "bg-light"
-                  }`}
-                  style={{ height: "2px", width: "50px" }}
-                ></div>
-              </div>
+                  {/* Step Circle + Label */}
+                  <div className="d-flex flex-column flex-lg-row align-items-center text-center text-lg-start">
+                    <div
+                      className={`rounded-circle d-flex align-items-center justify-content-center mx-auto mx-lg-0 ${currentStep >= item.step ? "bg-warning text-dark" : "bg-light text-muted"
+                        }`}
+                      style={{ width: "32px", height: "32px" }}
+                    >
+                      {item.step}
+                    </div>
+                    <span className="mt-1 mt-lg-0 ms-lg-2 small fw-medium">{item.label}</span>
+                  </div>
 
-              {/* Step 2 */}
-              <div
-                className={`d-flex align-items-center flex-shrink-0 ${
-                  currentStep > 2 ? "text-dark" : "text-muted"
-                }`}
-              >
-                <div
-                  className={`rounded-circle d-flex align-items-center justify-content-center ${
-                    currentStep >= 2
-                      ? "bg-warning text-dark"
-                      : "bg-light text-muted"
-                  }`}
-                  style={{ width: "32px", height: "32px" }}
-                >
-                  2
+                  {/* Line (only visible on large screens and up) */}
+                  {index !== arr.length - 1 && (
+                    <div
+                      className={`d-none d-lg-block mx-lg-2 ${currentStep > item.step ? "bg-warning" : "bg-dark"
+                        }`}
+                      style={{ height: "2px", width: "245px" }}
+                    ></div>
+                  )}
                 </div>
-                <span className="ms-2 small">Select Time</span>
-                <div
-                  className={`mx-2 ${
-                    currentStep > 2 ? "bg-warning" : "bg-light"
-                  }`}
-                  style={{ height: "2px", width: "50px" }}
-                ></div>
-              </div>
-
-              {/* Step 3 */}
-              <div
-                className={`d-flex align-items-center flex-shrink-0 ${
-                  currentStep > 3 ? "text-dark" : "text-muted"
-                }`}
-              >
-                <div
-                  className={`rounded-circle d-flex align-items-center justify-content-center ${
-                    currentStep >= 3
-                      ? "bg-warning text-dark"
-                      : "bg-light text-muted"
-                  }`}
-                  style={{ width: "32px", height: "32px" }}
-                >
-                  3
-                </div>
-                <span className="ms-2 small">Enter Details</span>
-                <div
-                  className={`mx-2 ${
-                    currentStep > 3 ? "bg-warning" : "bg-light"
-                  }`}
-                  style={{ height: "2px", width: "50px" }}
-                ></div>
-              </div>
-
-              {/* Step 4 */}
-              <div
-                className={`d-flex align-items-center flex-shrink-0 ${
-                  currentStep === 4 ? "text-dark" : "text-muted"
-                }`}
-              >
-                <div
-                  className={`rounded-circle d-flex align-items-center justify-content-center ${
-                    currentStep >= 4
-                      ? "bg-warning text-dark"
-                      : "bg-light text-muted"
-                  }`}
-                  style={{ width: "32px", height: "32px" }}
-                >
-                  4
-                </div>
-                <span className="ms-2 small">Confirm</span>
-                <div
-                  className={`mx-2 ${
-                    currentStep > 3 ? "bg-warning" : "bg-light"
-                  }`}
-                  style={{ height: "2px", width: "50px" }}
-                ></div>
-              </div>
+              ))}
             </div>
           </div>
+
         </header>
 
         {/* Content Area */}
@@ -291,11 +227,10 @@ const BookTable = () => {
               {tableTypes.map((type) => (
                 <div key={type.id} className="col-md-6 col-lg-3">
                   <div
-                    className={`card h-100 cursor-pointer ${
-                      selectedType === type.id
-                        ? "border-warning bg-warning bg-opacity-10"
-                        : ""
-                    }`}
+                    className={`card h-100 cursor-pointer ${selectedType === type.id
+                      ? "border-warning bg-warning bg-opacity-10"
+                      : ""
+                      }`}
                     onClick={() => setSelectedType(type.id)}
                   >
                     <div
@@ -342,13 +277,13 @@ const BookTable = () => {
               {/* Calendar */}
               <div className="col-lg-6">
                 <div className="card">
-                <Calendar/>
+                  <Calendar />
                 </div>
               </div>
 
               {/* Time Slots */}
               <div className="col-lg-6">
-                <div className="card">
+                <div className="card h-100">
                   <div className="card-body">
                     <h3 className="h6 fw-semibold text-dark mb-3">
                       Available Time Slots
@@ -360,13 +295,12 @@ const BookTable = () => {
                         return (
                           <div key={slot} className="col">
                             <button
-                              className={`btn w-100 btn-sm ${
-                                isSelected
-                                  ? "btn-warning"
-                                  : isBooked
+                              className={`btn w-100 btn-sm ${isSelected
+                                ? "btn-warning"
+                                : isBooked
                                   ? "btn-light text-muted disabled"
                                   : "btn-outline-secondary"
-                              }`}
+                                }`}
                               disabled={isBooked}
                               onClick={() => setSelectedTime(slot)}
                             >
@@ -503,14 +437,12 @@ const BookTable = () => {
                 <div className="mb-4">
                   <div className="d-flex align-items-center p-3 bg-light rounded">
                     <div
-                      className={`bg-${
-                        getTypeInfo(selectedType).color
-                      }-100 rounded p-3 me-3`}
+                      className={`bg-${getTypeInfo(selectedType).color
+                        }-100 rounded p-3 me-3`}
                     >
                       {React.cloneElement(getTypeInfo(selectedType).icon, {
-                        className: `text-${
-                          getTypeInfo(selectedType).color
-                        } fs-4`,
+                        className: `text-${getTypeInfo(selectedType).color
+                          } fs-4`,
                       })}
                     </div>
                     <div>
