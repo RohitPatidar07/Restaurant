@@ -117,68 +117,68 @@ const SessionHistory = () => {
         </p>
       </div>
 
-     <div className="card p-3 shadow-sm mb-4">
-  <div className="row g-2 align-items-stretch">
-    {/* Search Input */}
-    <div className="col-12 col-sm-6 col-lg-4">
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Search sessions by ID, table type..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-    </div>
+      <div className="card p-3 shadow-sm mb-4">
+        <div className="row g-2 align-items-stretch">
+          {/* Search Input */}
+          <div className="col-12 col-sm-6 col-lg-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search sessions by ID, table type..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-    {/* Start Date */}
-    <div className="col-6 col-sm-3 col-lg-2">
-      <input type="date" className="form-control" />
-    </div>
+          {/* Start Date */}
+          <div className="col-6 col-sm-3 col-lg-2">
+            <input type="date" className="form-control" />
+          </div>
 
-    {/* End Date */}
-    <div className="col-6 col-sm-3 col-lg-2">
-      <input type="date" className="form-control" />
-    </div>
+          {/* End Date */}
+          <div className="col-6 col-sm-3 col-lg-2">
+            <input type="date" className="form-control" />
+          </div>
 
-    {/* Table Type Dropdown */}
-    <div className="col-12 col-sm-6 col-lg-2 position-relative">
-      <button
-        className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-      >
-        {selectedTableType}
-        <RiArrowDownSLine className={`${isDropdownOpen ? "rotate-180" : ""}`} />
-      </button>
-
-      {isDropdownOpen && (
-        <div className="position-absolute top-100 start-0 end-0 mt-1 bg-white border rounded shadow-sm z-3">
-          {[
-            "All Table Types",
-            "Snooker Table",
-            "Pool Table",
-            "PlayStation",
-            "Dining Table",
-          ].map((type) => (
+          {/* Table Type Dropdown */}
+          <div className="col-12 col-sm-6 col-lg-2 position-relative">
             <button
-              key={type}
-              className="dropdown-item text-start"
-              onClick={() => handleTableTypeSelect(type)}
+              className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              {type}
+              {selectedTableType}
+              <RiArrowDownSLine className={`${isDropdownOpen ? "rotate-180" : ""}`} />
             </button>
-          ))}
-        </div>
-      )}
-    </div>
 
-    {/* Clear Filters Button */}
-    <div className="col-12 col-sm-6 col-lg-2">
-      <button className="btn btn-light w-100" onClick={clearFilters}>
-        Clear Filters
-      </button>
-    </div>
-  </div>
-</div>
+            {isDropdownOpen && (
+              <div className="position-absolute top-100 start-0 end-0 mt-1 bg-white border rounded shadow-sm z-3">
+                {[
+                  "All Table Types",
+                  "Snooker Table",
+                  "Pool Table",
+                  "PlayStation",
+                  "Dining Table",
+                ].map((type) => (
+                  <button
+                    key={type}
+                    className="dropdown-item text-start"
+                    onClick={() => handleTableTypeSelect(type)}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Clear Filters Button */}
+          <div className="col-12 col-sm-6 col-lg-2">
+            <button className="btn btn-light w-100" onClick={clearFilters}>
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </div>
 
 
       {filteredSessions.length > 0 ? (
@@ -271,8 +271,6 @@ const SessionHistory = () => {
          .rotate-180 { transform: rotate(180deg); }
   .dropdown-item { width: 100%; text-align: left; padding: 0.5rem 1rem; border-bottom: 1px solid #f1f1f1; }
   .dropdown-item:last-child { border-bottom: none; }
-
-
 
   .position-absolute {
     z-index: 10;
