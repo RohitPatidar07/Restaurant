@@ -155,7 +155,7 @@ const Signup = () => {
 
               <div className="text-center">
                 <span className="text-muted">Already have an account? </span>
-                <Link to="/login" className="text-decoration-none fw-semibold" style={{ color: "#1f2937" }}>
+                <Link to="/" className="text-decoration-none fw-semibold" style={{ color: "#1f2937" }}>
                   Login
                 </Link>
               </div>
