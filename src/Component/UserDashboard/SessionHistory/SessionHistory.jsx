@@ -273,7 +273,6 @@ const SessionHistory = () => {
   .dropdown-item:last-child { border-bottom: none; }
 
 
-
   .position-absolute {
     z-index: 10;
   }
