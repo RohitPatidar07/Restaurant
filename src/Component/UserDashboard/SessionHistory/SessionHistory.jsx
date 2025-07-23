@@ -117,63 +117,69 @@ const SessionHistory = () => {
         </p>
       </div>
 
-      <div className="card p-3 shadow-sm mb-4">
-        <div className="row g-2 align-items-center">
-          <div className="col-lg-4">
-            <div className="">
-              <input
-                type="text"
-                className="form-control "
-                placeholder="Search sessions by ID, table type..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
+     <div className="card p-3 shadow-sm mb-4">
+  <div className="row g-2 align-items-stretch">
+    {/* Search Input */}
+    <div className="col-12 col-sm-6 col-lg-4">
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Search sessions by ID, table type..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
 
-          <div className="col-lg-2">
-            <input type="date" className="form-control" />
-          </div>
-          <div className="col-lg-2">
-            <input type="date" className="form-control" />
-          </div>
-          <div className="col-lg-2 ">
+    {/* Start Date */}
+    <div className="col-6 col-sm-3 col-lg-2">
+      <input type="date" className="form-control" />
+    </div>
+
+    {/* End Date */}
+    <div className="col-6 col-sm-3 col-lg-2">
+      <input type="date" className="form-control" />
+    </div>
+
+    {/* Table Type Dropdown */}
+    <div className="col-12 col-sm-6 col-lg-2 position-relative">
+      <button
+        className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+      >
+        {selectedTableType}
+        <RiArrowDownSLine className={`${isDropdownOpen ? "rotate-180" : ""}`} />
+      </button>
+
+      {isDropdownOpen && (
+        <div className="position-absolute top-100 start-0 end-0 mt-1 bg-white border rounded shadow-sm z-3">
+          {[
+            "All Table Types",
+            "Snooker Table",
+            "Pool Table",
+            "PlayStation",
+            "Dining Table",
+          ].map((type) => (
             <button
-              className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              key={type}
+              className="dropdown-item text-start"
+              onClick={() => handleTableTypeSelect(type)}
             >
-              {selectedTableType}{" "}
-              <RiArrowDownSLine
-                className={`${isDropdownOpen ? "rotate-180" : ""}`}
-              />
+              {type}
             </button>
-            {isDropdownOpen && (
-              <div className="position-absolute top-100 start-0 end-0 mt-1 bg-white border rounded shadow-sm">
-                {[
-                  "All Table Types",
-                  "Snooker Table",
-                  "Pool Table",
-                  "PlayStation",
-                  "Dining Table",
-                ].map((type) => (
-                  <button
-                    key={type}
-                    className="dropdown-item text-start"
-                    onClick={() => handleTableTypeSelect(type)}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="col-lg-2">
-            <button className="btn btn-light w-100" onClick={clearFilters}>
-              Clear Filters
-            </button>
-          </div>
+          ))}
         </div>
-      </div>
+      )}
+    </div>
+
+    {/* Clear Filters Button */}
+    <div className="col-12 col-sm-6 col-lg-2">
+      <button className="btn btn-light w-100" onClick={clearFilters}>
+        Clear Filters
+      </button>
+    </div>
+  </div>
+</div>
+
 
       {filteredSessions.length > 0 ? (
         <>
