@@ -146,7 +146,7 @@ const DeviceMonitor = () => {
   const offlineCount = devices.filter(d => d.status === 'offline').length;
 
   return (
-    <div className="device-monitor-container bg-light min-vh-100">
+    <div className="device-monitor-container bg-light p-3">
       {/* Header */}
       <header className="bg-white shadow-sm border-bottom py-3 px-4">
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
@@ -204,85 +204,240 @@ const DeviceMonitor = () => {
       </div>
 
       {/* Device Grid */}
-      <div className="container-fluid py-4">
-        <div className="row g-4">
-          {devices.map(device => (
-            <div key={device.id} className="col-12 col-sm-6 col-lg-4 col-xl-3">
-              <div className="card shadow-sm border-0 h-100">
-                <div className="card-body p-4">
-                  <div className="d-flex justify-content-between align-items-start mb-3">
-                    <div className="d-flex align-items-center">
-                      <div className={`${device.bgColor} rounded-3 p-3 me-3`}>
-                        {device.icon}
-                      </div>
-                      <div>
-                        <h6 className="fw-bold mb-1">{device.name}</h6>
-                        <p className="text-muted small mb-0">{device.location}</p>
-                      </div>
-                    </div>
-                    <div className="d-flex flex-column align-items-end gap-1">
-                      <span className={`badge ${device.status === 'online' ? 'bg-success' : 'bg-secondary'} text-white`}>
-                        {device.status === 'online' ? 'Online' : 'Offline'}
-                      </span>
-                      <span className={`badge ${device.powerState === 'on' ? 'bg-primary' : 'bg-danger'} text-white`}>
-                        {device.powerState.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <div className="d-flex justify-content-between small text-muted mb-2">
-                      <span>Power Consumption</span>
-                      <span className="fw-medium">
-                        {device.powerConsumption !== null ? `${device.powerConsumption}W` : '--W'}
-                      </span>
-                    </div>
-                    <div className="progress" style={{ height: '6px' }}>
-                      <div
-                        className={`progress-bar ${device.powerState === 'on' ? 'bg-warning' : 'bg-secondary'}`}
-                        style={{
-                          width: `${device.powerConsumption ? Math.min(device.powerConsumption / 2, 100) : 0}%`
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div className={`small ${device.status === 'offline' ? 'text-danger' : 'text-muted'}`}>
-                      {device.status === 'offline' ? 'Last seen: ' : 'Updated: '}
-                      {device.lastUpdated}
-                    </div>
-                    <div className="d-flex gap-2">
-                      <div
-                        className={`device-toggle-switch position-relative rounded-pill ${device.powerState === 'on' ? 'bg-warning' : 'bg-dark'} ${device.status === 'offline' ? 'opacity-50' : ''}`}
-                        onClick={() => device.status === 'online' && toggleDevice(device.id)}
-                        style={{ width: '48px', height: '24px', cursor: device.status === 'offline' ? 'not-allowed' : 'pointer' }}
-                      >
-                        <div
-                          className="position-absolute top-1 start-1 bg-white rounded-circle shadow-sm"
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            transform: device.powerState === 'on' ? 'translateX(24px)' : 'translateX(0)',
-                            transition: 'transform 0.3s ease'
-                          }}
-                        ></div>
-                      </div>
-                      <button
-                        className={`btn btn-sm ${device.status === 'offline' ? 'btn-outline-secondary disabled' : 'btn-outline-dark'}`}
-                        onClick={() => device.status === 'online' && showOverrideModal(device)}
-                        disabled={device.status === 'offline'}
-                      >
-                        Override
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+  <div className="row g-3">
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">PlayStation 5</h6>
+          <div className="text-muted small">Table PS-01</div>
+        </div>
+        <div>
+          <span className="badge bg-success me-1">Online</span>
+          <span className="badge bg-primary">ON</span>
         </div>
       </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">180W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-warning" style={{ width: "70%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-muted">Updated: 2 min ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+          </div>
+          <button className="btn btn-outline-dark btn-sm">Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">Snooker Table</h6>
+          <div className="text-muted small">Table SN-03</div>
+        </div>
+        <div>
+          <span className="badge bg-success me-1">Online</span>
+          <span className="badge bg-danger">OFF</span>
+        </div>
+      </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">0W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-secondary" style={{ width: "0%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-muted">Updated: 1 min ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" />
+          </div>
+          <button className="btn btn-outline-dark btn-sm">Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">Coffee Machine</h6>
+          <div className="text-muted small">Restaurant Area</div>
+        </div>
+        <div>
+          <span className="badge bg-secondary me-1">Offline</span>
+          <span className="badge bg-danger">OFF</span>
+        </div>
+      </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">--W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-secondary" style={{ width: "0%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-danger">Last seen: 15 min ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" disabled />
+          </div>
+          <button className="btn btn-outline-secondary btn-sm" disabled>Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">Xbox Series X</h6>
+          <div className="text-muted small">Table XB-02</div>
+        </div>
+        <div>
+          <span className="badge bg-success me-1">Online</span>
+          <span className="badge bg-primary">ON</span>
+        </div>
+      </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">165W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-warning" style={{ width: "60%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-muted">Updated: 30 sec ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+          </div>
+          <button className="btn btn-outline-dark btn-sm">Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">Pool Table</h6>
+          <div className="text-muted small">Table PL-05</div>
+        </div>
+        <div>
+          <span className="badge bg-success me-1">Online</span>
+          <span className="badge bg-primary">ON</span>
+        </div>
+      </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">45W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-warning" style={{ width: "20%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-muted">Updated: 1 min ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+          </div>
+          <button className="btn btn-outline-dark btn-sm">Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">Smart TV</h6>
+          <div className="text-muted small">Lounge Area</div>
+        </div>
+        <div>
+          <span className="badge bg-success me-1">Online</span>
+          <span className="badge bg-danger">OFF</span>
+        </div>
+      </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">2W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-secondary" style={{ width: "2%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-muted">Updated: 45 sec ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" />
+          </div>
+          <button className="btn btn-outline-dark btn-sm">Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">LED Lighting</h6>
+          <div className="text-muted small">Main Hall</div>
+        </div>
+        <div>
+          <span className="badge bg-success me-1">Online</span>
+          <span className="badge bg-primary">ON</span>
+        </div>
+      </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">120W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-warning" style={{ width: "60%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-muted">Updated: 3 min ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" defaultChecked />
+          </div>
+          <button className="btn btn-outline-dark btn-sm">Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="col-md-3">
+    <div className="card shadow-sm p-3">
+      <div className="d-flex justify-content-between">
+        <div>
+          <h6 className="fw-bold">Sound System</h6>
+          <div className="text-muted small">Entertainment Zone</div>
+        </div>
+        <div>
+          <span className="badge bg-secondary me-1">Offline</span>
+          <span className="badge bg-danger">OFF</span>
+        </div>
+      </div>
+      <div className="mt-3 mb-2">Power Consumption</div>
+      <div className="fw-bold">--W</div>
+      <div className="progress my-2" style={{ height: "6px" }}>
+        <div className="progress-bar bg-secondary" style={{ width: "0%" }}></div>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <small className="text-danger">Last seen: 8 min ago</small>
+        <div className="d-flex align-items-center gap-2">
+          <div className="form-check form-switch m-0">
+            <input className="form-check-input" type="checkbox" role="switch" disabled />
+          </div>
+          <button className="btn btn-outline-secondary btn-sm" disabled>Override</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       {/* Override Modal */}
       {showModal && (

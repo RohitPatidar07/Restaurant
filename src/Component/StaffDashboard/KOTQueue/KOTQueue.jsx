@@ -90,7 +90,7 @@ const KOTQueue = () => {
     return (
         <div className=''>
             {/* Main Content */}
-            <main className="">
+            <div className="">
                 {/* Header */}
                 <header className="p-4">
                     <div className=" d-flex justify-content-between align-items-center">
@@ -387,7 +387,7 @@ const KOTQueue = () => {
                         </div>
                     )}
                 </div>
-            </main>
+            </div>
         </div>
     );
 };

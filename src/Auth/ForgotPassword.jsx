@@ -26,14 +26,12 @@ const ForgotPassword = () => {
           {/* Logo and Title */}
           <div className="d-flex justify-content-center align-items-center mb-4">
             <img
-              src="/logo.png"
+              src="https://i.postimg.cc/mZHz3k1Q/Whats-App-Image-2025-07-23-at-12-38-03-add5b5dd-removebg-preview-1.png"
               alt="logo"
               className="navbar-logo m-2"
               style={{ height: "50px" }}
             />
-            <span className="navbar-title fs-3 fw-bold" style={{ color: "#1f2937" }}>
-              POS Light Control
-            </span>
+
           </div>
 
           <h2 className="h5 text-secondary mt-3">Forgot Password?</h2>

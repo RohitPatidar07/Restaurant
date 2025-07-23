@@ -109,7 +109,7 @@ const MyReservations = () => {
             <div className="row g-3">
                 {reservations.map((reservation) => (
                     <div key={reservation.id} className={`col-12 col-lg-6 ${reservation.highlight ? 'reservation-highlight' : ''}`}>
-                        <div className={`card shadow-sm ${reservation.borderClass} h-100 position-relative overflow-hidden`}>
+                        <div className={`card shadow-sm h-100 position-relative overflow-hidden`}>
                             {reservation.highlight && (
                                 <div className="position-absolute top-0 end-0 bg-warning bg-opacity-10 rounded-circle"
                                     style={{ width: '80px', height: '80px', transform: 'translate(40px, -40px)' }}></div>
@@ -280,27 +280,7 @@ const MyReservations = () => {
             )}
 
             {/* Custom CSS */}
-            <style>
-                {`
-          .reservation-highlight .card {
-            border-color: #FCD34D !important;
-          }
-          .reservation-highlight::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 80px;
-            height: 80px;
-            background-color: rgba(252, 211, 77, 0.1);
-            border-radius: 50%;
-            transform: translate(40px, -40px);
-          }
-          .modal {
-            background-color: rgba(0,0,0,0.5);
-          }
-        `}
-            </style>
+     
         </div>
     );
 };

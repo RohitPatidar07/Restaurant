@@ -9,16 +9,17 @@ import {
     faUser,
     faCalendarCheck,
     faReceipt,
-    faClock ,
-    faHistory ,
+    faClock,
+    faHistory,
     faChartBar,
     faHome,
     faUsers,
-    faFileAlt
+    faFileAlt,
+    faDesktopAlt
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
-const Sidebar = ({ collapsed }) => {
+const Sidebar = ({ collapsed, setCollapsed }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const role = localStorage.getItem("role");
@@ -30,7 +31,7 @@ const Sidebar = ({ collapsed }) => {
         { name: "Printer Setup", path: "/admin/printersetup", icon: faUsers },
         { name: "Business Settings", path: "/admin/businesssettings", icon: faFileAlt },
         { name: "Reports Analytics", path: "/admin/reportanalytics", icon: faBriefcase },
-        { name: "Device Monitor", path: "/admin/devicemonitor", icon: faBriefcase },
+        { name: "Device Monitor", path: "/admin/devicemonitor", icon: faDesktopAlt  },
     ];
 
     const staffMenuItems = [
@@ -39,7 +40,7 @@ const Sidebar = ({ collapsed }) => {
         { name: "KOT Queue ​", path: "/staff/kotqueue", icon: faFileAlt },
         { name: "Reservations", path: "/staff/reservationsmanagement", icon: faBriefcase },
         { name: "Billing ​", path: "/staff/billingpayment", icon: faFileAlt },
-        { name: "Alerts", path: "/staff/alertsnotifications", icon: faBriefcase },
+        { name: "Alerts", path: "/staff/alertsnotifications", icon: faDesktopAlt },
     ];
 
     const userMenuItems = [
@@ -68,8 +69,16 @@ const Sidebar = ({ collapsed }) => {
 
     const isActive = (path) => location.pathname === path;
 
+    const handleMenuItemClick = (path) => {
+        navigate(path);
+        // Check if window width is mobile size (768px or less)
+        if (window.innerWidth <= 768) {
+            setCollapsed(true);
+        }
+    };
+
     return (
-        <div className={`sidebar-container shadow-sm ${collapsed ? "collapsed" : ""}`}>
+        <div className={`sidebar-container shadow-sm  ${collapsed ? "collapsed" : ""}`}>
             <div className="sidebar">
                 <ul className="menu">
                     {menuItems.map((item, index) => (
@@ -80,7 +89,7 @@ const Sidebar = ({ collapsed }) => {
                         >
                             <div
                                 className="menu-link"
-                                onClick={() => navigate(item.path)}
+                                onClick={() => handleMenuItemClick(item.path)}
                             >
                                 <FontAwesomeIcon icon={item.icon} className="menu-icon" />
                                 {!collapsed && <span className="menu-text">{item.name}</span>}

@@ -98,16 +98,16 @@ const BusinessSettings = () => {
   };
 
   return (
-    <div className="">
+    <div className="p-3">
       {/* Main Content */}
       <div className="p-3">
         {/* Header */}
         <div className="mb-3">
           <div className="d-flex justify-content-between align-items-center">
             <div>
-              <h1 className="fs-3 fw-bold text-dark d-flex align-items-center">
+              <h2 className=" fw-bold text-dark d-flex align-items-center">
                 Business Settings
-              </h1>
+              </h2>
             </div>
             <div className="d-flex align-items-center gap-2">
               <div className={`rounded-circle ${systemOnline ? 'bg-success' : 'bg-secondary'}`}></div>

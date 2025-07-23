@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./Layout/Navbar";
 import Sidebar from "./Layout/Sidebar";
 import Login from "./Auth/Login";
@@ -24,14 +24,20 @@ import SessionHistory from "./Component/UserDashboard/SessionHistory/SessionHist
 import Signup from "./Auth/Signup";
 import ForgotPassword from "./Auth/ForgotPassword";
 
-
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const role = localStorage.getItem("role");
 
-  const menusidebarcollaps = () => {
-    setIsSidebarCollapsed(true);
-  };
+  // Check if device is mobile on initial render
+  useEffect(() => {
+    const checkIfMobile = () => {
+      return window.innerWidth <= 768; // Standard mobile breakpoint
+    };
+    
+    if (checkIfMobile()) {
+      setIsSidebarCollapsed(true);
+    }
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed((prev) => !prev);
@@ -43,7 +49,6 @@ function App() {
   const hideLayout = location.pathname === "/login" ||
     location.pathname === "/signup" ||
     location.pathname === "/forgot-password";
-
 
   // Protected route component
   const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -60,7 +65,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          {/* Add other auth routes here */}
         </Routes>
       ) : (
         <>
@@ -68,7 +72,7 @@ function App() {
           <div className="main-content">
             <Sidebar
               collapsed={isSidebarCollapsed}
-              menuItemClick={menusidebarcollaps}
+              setCollapsed={setIsSidebarCollapsed}
             />
             <div className={`right-side-content ${isSidebarCollapsed ? "collapsed" : ""}`}>
               <Routes>
@@ -82,8 +86,6 @@ function App() {
                       <Route path="printersetup" element={<PrinterSetup />} />
                       <Route path="reportanalytics" element={<ReportsAnalytics />} />
                       <Route path="tableplugsetup" element={<TablePlugSetup />} />
-
-                      {/* Add more admin routes */}
                     </Routes>
                   </ProtectedRoute>
                 } />
@@ -98,8 +100,6 @@ function App() {
                       <Route path="reservationsmanagement" element={<ReservationsManagement />} />
                       <Route path="billingpayment" element={<BillingPayment />} />
                       <Route path="alertsnotifications" element={<AlertsNotifications />} />
-
-                      {/* Add more staff routes */}
                     </Routes>
                   </ProtectedRoute>
                 } />
@@ -113,19 +113,16 @@ function App() {
                       <Route path="sessiontracker" element={<SessionTracker />} />
                       <Route path="myreservations" element={<MyReservations />} />
                       <Route path="booktable" element={<BookTable />} />
-                        <Route path="sessionhistory" element={<SessionHistory />} />
-
-
-                      {/* Add more user routes */}
+                      <Route path="sessionhistory" element={<SessionHistory />} />
                     </Routes>
                   </ProtectedRoute>
                 } />
 
                 {/* Redirect to appropriate dashboard based on role */}
                 <Route path="/" element={
-                  role === "Admin" ? <Navigate to="/admin/dashboard" /> :
-                    role === "Staff" ? <Navigate to="/staff/dashboard" /> :
-                      role === "User" ? <Navigate to="/user/dashboard" /> :
+                  role === "Admin" ? <Navigate to="/admin/staffmanagement" /> :
+                    role === "Staff" ? <Navigate to="/staff/tablesmanagement" /> :
+                      role === "User" ? <Navigate to="/user/booktable" /> :
                         <Navigate to="/login" />
                 } />
               </Routes>
