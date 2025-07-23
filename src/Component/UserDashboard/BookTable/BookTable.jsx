@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import Calendar from './Calendar'; // ✅ Adjust the path if needed
+
 import {
   RiUserLine,
   RiDashboardLine,
@@ -341,50 +342,7 @@ const BookTable = () => {
               {/* Calendar */}
               <div className="col-lg-6">
                 <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <h3 className="h6 fw-semibold text-dark">Select Date</h3>
-                      <div className="d-flex align-items-center gap-2">
-                        <button className="btn btn-sm btn-light">
-                          <RiArrowLeftSLine />
-                        </button>
-                        <span className="small fw-medium">January 2025</span>
-                        <button className="btn btn-sm btn-light">
-                          <RiArrowRightSLine />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="row row-cols-7 g-1 mb-2">
-                      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                        (day) => (
-                          <div
-                            key={day}
-                            className="col text-muted small text-center py-2"
-                          >
-                            {day}
-                          </div>
-                        )
-                      )}
-                    </div>
-
-                    <div className="row row-cols-7 g-1">
-                      {daysInMonth.map((day, index) => (
-                        <div
-                          key={index}
-                          className={`col text-center py-2 small cursor-pointer rounded ${
-                            day.day === 19
-                              ? "bg-warning text-white"
-                              : day.currentMonth
-                              ? "text-dark"
-                              : "text-muted"
-                          }`}
-                        >
-                          {day.day}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                <Calendar/>
                 </div>
               </div>
 
