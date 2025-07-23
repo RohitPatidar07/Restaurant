@@ -272,10 +272,7 @@ const SessionHistory = () => {
   .dropdown-item { width: 100%; text-align: left; padding: 0.5rem 1rem; border-bottom: 1px solid #f1f1f1; }
   .dropdown-item:last-child { border-bottom: none; }
 
-  .position-relative {
-    position: relative;
-    z-index: 1;
-  }
+
 
   .position-absolute {
     z-index: 10;
