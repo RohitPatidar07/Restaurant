@@ -66,7 +66,7 @@ const MyBilling = () => {
       </header>
 
       {/* Main Content */}
-      <main className="mt-4">
+      <div className="mt-4">
         <div className="card shadow-lg">
           <div className="card-body">
             {/* Session Charges */}
@@ -303,7 +303,7 @@ const MyBilling = () => {
             </section>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

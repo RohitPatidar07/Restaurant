@@ -117,7 +117,7 @@ const SessionTracker = () => {
             </nav>
 
             {/* Main Content */}
-            <main className="mt-3">
+            <div className="mt-3">
                 {/* Session Info Card */}
                 <div className="mb-4">
                     <div className="bg-white rounded-3 shadow-sm p-4">
@@ -275,7 +275,7 @@ const SessionTracker = () => {
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
 
             {/* Notifications */}
             <div className="position-fixed top-4 end-4 d-flex flex-column gap-3" style={{ zIndex: 1050 }}>
