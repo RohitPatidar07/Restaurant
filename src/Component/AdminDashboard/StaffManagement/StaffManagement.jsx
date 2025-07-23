@@ -1,19 +1,41 @@
 import React, { useState } from 'react';
-import { 
-  Container, Row, Col, Card, Button, Form, 
-  Modal, Navbar, Nav, Badge, Dropdown, 
-  FormControl, InputGroup, ListGroup 
+import {
+  Container, Row, Col, Card, Button, Form,
+  Modal, Navbar, Nav, Badge, Dropdown,
+  FormControl, InputGroup, ListGroup
 } from 'react-bootstrap';
-import { 
-  Dash, People, Search, Plus, Pencil, Trash, 
-  Eye, EyeSlash, X, ChevronDown, Person 
+import {
+  Dash, People, Search, Plus, Pencil, Trash,
+  Eye, EyeSlash, X, ChevronDown, Person
 } from 'react-bootstrap-icons';
+import { FaSearch, FaPlus } from "react-icons/fa";
 
 const StaffManagement = () => {
+
+
   const [showModal, setShowModal] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+
+  // Open modal with staff details
+  const handleEditClick = (staff) => {
+    setSelectedStaff({ ...staff }); // create a copy to edit
+    setShowModal(true);
+  };
+
+  // Handle input changes in modal
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedStaff((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Save changes
+  const handleSave = () => {
+    handleUpdateStaff(selectedStaff); // update parent state or API
+    setShowModal(false);
+  };
+
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [selectedStaff, setSelectedStaff] = useState('');
-  const [staffMembers] = useState([ 
+  const [staffMembers] = useState([
     { id: 'sarah', name: 'Sarah Johnson', phone: '+1 (555) 123-4567', role: 'Admin', color: 'primary' },
     { id: 'michael', name: 'Michael Chen', phone: '+1 (555) 234-5678', role: 'Staff', color: 'success' },
     { id: 'emily', name: 'Emily Rodriguez', phone: '+1 (555) 345-6789', role: 'Manager', color: 'info' },
@@ -36,7 +58,7 @@ const StaffManagement = () => {
   };
 
   const getBadgeVariant = (role) => {
-    switch(role) {
+    switch (role) {
       case 'Admin': return 'primary';
       case 'Manager': return 'info';
       case 'Staff': return 'success';
@@ -44,11 +66,77 @@ const StaffManagement = () => {
     }
   };
 
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <div className="p-3">
-      <div className='mb-4'>
-         <h1 className='h2 fw-bold text-dark'>Staff Management</h1>
+      <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <div>
+          <h1 className="h4 fw-bold text-dark mb-0">Staff Management</h1>
+        </div>
+
+        <div className="d-flex align-items-center mt-3 mt-md-0">
+          <div className="input-group me-2">
+            <span className="input-group-text bg-white border-end-0">
+              <FaSearch className="text-muted" />
+            </span>
+            <input
+              type="text"
+              className="form-control border-start-0"
+              placeholder="Search staff..."
+              style={{ maxWidth: "220px" }}
+            />
+          </div>
+
+          <button
+            className="btn btn-warning d-flex align-items-center fw-semibold"
+            style={{ whiteSpace: 'nowrap', gap: '0.5rem' }}
+            onClick={handleShow}
+          >
+            <FaPlus />
+            Add New Staff
+          </button>
+
+          {/* Modal */}
+          <Modal show={show} onHide={handleClose} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Add New Staff</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group className="mb-3" controlId="formUsername">
+                  <Form.Label>UserName</Form.Label>
+                  <Form.Control type="text" placeholder="Enter full name" />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formEmail">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control type="email" placeholder="Enter Email" />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control type="password" placeholder="Enter Password" />
+                </Form.Group>
+
+                <div className="d-flex justify-content-between">
+                  <Button variant="warning" className="fw-semibold">
+                    Save Staff
+                  </Button>
+                  <Button variant="light" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                </div>
+              </Form>
+            </Modal.Body>
+          </Modal>
+
+        </div>
       </div>
+
       {/* Main Content */}
       <div>
         {/* Staff List */}
@@ -71,7 +159,11 @@ const StaffManagement = () => {
                       <Badge bg={getBadgeVariant(staff.role)}>{staff.role}</Badge>
                     </div>
                     <div className="d-flex">
-                      <Button variant="light" className="me-2 flex-grow-1 text-dark">
+                      <Button
+                        variant="light"
+                        className="me-2 flex-grow-1 text-dark"
+                        onClick={() => handleEditClick(staff)}
+                      >
                         <Pencil className="me-1" />
                         Edit
                       </Button>
@@ -85,11 +177,59 @@ const StaffManagement = () => {
             ))}
           </Row>
 
+          {/* Edit Modal */}
+          <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Staff Member</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {selectedStaff && (
+                <Form>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      value={selectedStaff.name || ""}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Phone</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="phone"
+                      value={selectedStaff.phone || ""}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Role</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="role"
+                      value={selectedStaff.role || ""}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+                </Form>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={handleSave}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
           {/* Access Management */}
           <Card className="mb-4">
             <Card.Body>
               <h4 className="mb-4">Access Management</h4>
-              
+
               <Form.Group className="mb-4">
                 <Form.Label>Select Staff Member</Form.Label>
                 <Form.Select onChange={handleStaffSelect} value={selectedStaff}>
@@ -289,36 +429,36 @@ const StaffManagement = () => {
               <Form.Label>Full Name</Form.Label>
               <Form.Control type="text" placeholder="Enter full name" required />
             </Form.Group>
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Username</Form.Label>
               <Form.Control type="text" placeholder="Enter username" required />
             </Form.Group>
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" placeholder="Enter email address" required />
             </Form.Group>
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Password</Form.Label>
               <InputGroup>
-                <Form.Control 
-                  type={passwordVisible ? "text" : "password"} 
-                  placeholder="Enter password" 
-                  required 
+                <Form.Control
+                  type={passwordVisible ? "text" : "password"}
+                  placeholder="Enter password"
+                  required
                 />
                 <InputGroup.Text onClick={togglePasswordVisibility} style={{ cursor: 'pointer' }}>
                   {passwordVisible ? <EyeSlash /> : <Eye />}
                 </InputGroup.Text>
               </InputGroup>
             </Form.Group>
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Phone Number</Form.Label>
               <Form.Control type="tel" placeholder="+1 (555) 123-4567" required />
             </Form.Group>
-            
+
             <Form.Group className="mb-4">
               <Form.Label>Role</Form.Label>
               <Form.Select required>
@@ -328,14 +468,14 @@ const StaffManagement = () => {
                 <option value="staff">Staff</option>
               </Form.Select>
             </Form.Group>
-            
+
             <div className="d-flex gap-3">
               <Button variant="warning" type="submit" className="text-dark flex-grow-1">
                 Save Staff
               </Button>
-              <Button 
-                variant="outline-secondary" 
-                className="flex-grow-1" 
+              <Button
+                variant="outline-secondary"
+                className="flex-grow-1"
                 onClick={() => setShowModal(false)}
               >
                 Cancel

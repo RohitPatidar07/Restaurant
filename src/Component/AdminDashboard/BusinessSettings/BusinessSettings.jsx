@@ -100,7 +100,7 @@ const BusinessSettings = () => {
   return (
     <div className="p-3">
       {/* Main Content */}
-      <div className="p-3">
+      <div className="">
         {/* Header */}
         <div className="mb-3">
           <div className="d-flex justify-content-between align-items-center">

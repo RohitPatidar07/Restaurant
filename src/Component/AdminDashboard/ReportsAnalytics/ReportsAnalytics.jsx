@@ -185,9 +185,9 @@ const ReportsAnalytics = () => {
   return (
     <div className="p-3">
       {/* Main Content */}
-      <div className="flex-grow-1 d-flex flex-column overflow-hidden">
+      <div className="">
         {/* Content Area */}
-        <div className="flex-grow-1 overflow-auto p-4">
+        <div className="">
           <h2 className="fw-bold text-dark d-flex align-items-center">Reports & Analytics</h2>
 
           {/* KPI Cards */}
