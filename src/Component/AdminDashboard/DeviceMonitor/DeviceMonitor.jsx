@@ -142,6 +142,7 @@ const DeviceMonitor = () => {
     setTimeout(() => setShowToast(false), 3000);
   };
 
+
   const onlineCount = devices.filter(d => d.status === 'online').length;
   const offlineCount = devices.filter(d => d.status === 'offline').length;
 

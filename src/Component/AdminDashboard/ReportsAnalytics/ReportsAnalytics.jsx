@@ -74,12 +74,7 @@ const ReportsAnalytics = () => {
     initRevenueShareChart();
     initRevenueTimelineChart();
 
-    // Cleanup function to dispose charts when component unmounts
-    return () => {
-      echarts.dispose(document.getElementById('revenue-category-chart'));
-      echarts.dispose(document.getElementById('revenue-share-chart'));
-      echarts.dispose(document.getElementById('revenue-timeline-chart'));
-    };
+
   }, []);
 
   const initRevenueCategoryChart = () => {
