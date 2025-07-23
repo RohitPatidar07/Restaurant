@@ -18,10 +18,14 @@ const Navbar = ({ toggleSidebar }) => {
       <nav className="navbar sticky-top position-sticky  px-4 py-2 d-flex justify-content-between align-items-center shadow-sm">
         {/* Left: Logo & Title */}
         <div className="d-flex align-items-center">
-          <Link to="/" className="navbar-brand d-flex flex-column">
-            <span className="fw-bold text-warning" style={{ fontSize: '1.5rem' }}>logo</span>
-            
-          </Link>
+     <Link to="/" className="navbar-brand d-flex flex-column">
+  <img 
+    src="https://i.postimg.cc/mZHz3k1Q/Whats-App-Image-2025-07-23-at-12-38-03-add5b5dd-removebg-preview-1.png" 
+    alt="Logo" 
+    style={{ height: '35px', width:"100px"} }
+    className="img-fluid"
+  />
+</Link>
           <button
             className="btn btn-outline-light d-lg-none ms-3"
             onClick={toggleSidebar}
