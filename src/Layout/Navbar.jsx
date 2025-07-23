@@ -63,7 +63,7 @@ const Navbar = ({ toggleSidebar }) => {
                 My Profile
               </Link>
               <div className="dropdown-divider"></div>
-              <Link to="/login" className="dropdown-item" onClick={closeDropdown}>
+              <Link to="/" className="dropdown-item" onClick={closeDropdown}>
                 Logout
               </Link>
             </div>
