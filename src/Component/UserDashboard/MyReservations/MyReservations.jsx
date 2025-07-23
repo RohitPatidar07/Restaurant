@@ -96,13 +96,12 @@ const MyReservations = () => {
     };
 
     return (
-        <div className="p-4">
+        <div className="p-3">
             {/* Header */}
-            <div className="mb-4">
+            <div className="mb-3">
                 <div className="d-flex align-items-center gap-3">
                     <h1 className="text-dark fs-3 fw-bold">My Reservations</h1>
                 </div>
-                <div className="border-top border-gray-200"></div>
             </div>
 
             {/* Reservations Grid */}
