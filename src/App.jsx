@@ -46,23 +46,24 @@ function App() {
   const location = useLocation();
 
   // Pages that don't need layout (auth pages)
-  const hideLayout = location.pathname === "/login" ||
+  const hideLayout = location.pathname === "/" ||
     location.pathname === "/signup" ||
     location.pathname === "/forgot-password";
 
   // Protected route component
   const ProtectedRoute = ({ children, allowedRoles }) => {
     if (!role || !allowedRoles.includes(role)) {
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/" replace />;
     }
     return children;
   };
 
   return (
     <>
+    
       {hideLayout ? (
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
@@ -123,7 +124,7 @@ function App() {
                   role === "Admin" ? <Navigate to="/admin/staffmanagement" /> :
                     role === "Staff" ? <Navigate to="/staff/tablesmanagement" /> :
                       role === "User" ? <Navigate to="/user/booktable" /> :
-                        <Navigate to="/login" />
+                        <Navigate to="/" />
                 } />
               </Routes>
             </div>

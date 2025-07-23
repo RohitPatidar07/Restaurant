@@ -81,7 +81,7 @@ const ForgotPassword = () => {
           )}
 
           <div className="text-center mt-3">
-            <Link to="/login" className="text-decoration-none fw-semibold" style={{ color: "#1f2937" }}>
+            <Link to="/" className="text-decoration-none fw-semibold" style={{ color: "#1f2937" }}>
               Back to Login
             </Link>
           </div>
