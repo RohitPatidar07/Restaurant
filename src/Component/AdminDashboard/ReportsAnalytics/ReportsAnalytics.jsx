@@ -188,15 +188,15 @@ const ReportsAnalytics = () => {
   };
 
   return (
-    <div className="">
+    <div className="p-3">
       {/* Main Content */}
       <div className="flex-grow-1 d-flex flex-column overflow-hidden">
         {/* Content Area */}
-        <main className="flex-grow-1 overflow-auto p-4">
-          <h1 className="h3 mb-4 font-weight-bold">Reports & Analytics</h1>
+        <div className="flex-grow-1 overflow-auto p-4">
+          <h2 className="fw-bold text-dark d-flex align-items-center">Reports & Analytics</h2>
 
           {/* KPI Cards */}
-          <div className="row g-4 mb-3">
+          <div className="row g-4 mb-3 mt-2">
             {kpis.map((item, idx) => (
               <div key={idx} className="col-md-4">
                 <div className="card p-4 rounded shadow-sm bg-white h-100 border-0">
@@ -343,7 +343,7 @@ const ReportsAnalytics = () => {
               </table>
             </div>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

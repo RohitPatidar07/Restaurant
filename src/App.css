@@ -251,6 +251,7 @@ select.form-input {
 /* maindashbord start */
 .main-content {
   display: flex;
+ 
 }
 
 /* maindashbord end */
@@ -273,7 +274,7 @@ select.form-input {
   }
   .right-side-content {
   width: 100%;
-  margin-top: 85px;
+  margin-top: 20px;
   padding-left: 0px;
   /* background-color: #f2f2f2; */
   /* height: 668px; */

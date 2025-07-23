@@ -43,7 +43,7 @@ const Navbar = ({ toggleSidebar }) => {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <i className="bi bi-bell fs-5 text-dark bg-white rounded-circle p-1 px-2"></i>
+              <i className="bi bi-bell fs-4 text-warning   rounded-circle p-1 px-2"></i>
             </button>
             <ul className="dropdown-menu dropdown-menu-end shadow-sm mt-2">
               <li>

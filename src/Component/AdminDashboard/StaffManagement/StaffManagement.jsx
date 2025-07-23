@@ -45,7 +45,7 @@ const StaffManagement = () => {
   };
 
   return (
-    <div className="p-2">
+    <div className="p-3">
       <div className='mb-4'>
          <h1 className='h2 fw-bold text-dark'>Staff Management</h1>
       </div>
