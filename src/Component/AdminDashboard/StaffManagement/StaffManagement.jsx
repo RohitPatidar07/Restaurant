@@ -463,7 +463,7 @@ const StaffManagement = () => {
               <Form.Label>Role</Form.Label>
               <Form.Select required>
                 <option value="">Select a role...</option>
-                <option value="admin">Admin</option>
+                {/* <option value="admin">Admin</option> */}
                 <option value="manager">Manager</option>
                 <option value="staff">Staff</option>
               </Form.Select>

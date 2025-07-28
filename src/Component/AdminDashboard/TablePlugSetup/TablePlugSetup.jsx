@@ -109,7 +109,7 @@ function TabelPlugSetup() {
                                         <FaTable className="text-dark" />
                                     </div>
                                     <h5 className=" fw-light text-dark mb-0">
-                                        {editingTable ? 'Edit Table Type' : 'Add Table Type'}
+                                        {editingTable ? 'Edit Table Type' : 'Add Table'}
                                     </h5>
                                 </div>
 
@@ -125,7 +125,7 @@ function TabelPlugSetup() {
                                     </div>
 
                                     <div className="mb-3">
-                                        <label className="form-label">Table Type</label>
+                                        <label className="form-label">Select group</label>
                                         <div className="position-relative">
                                             <button
                                                 type="button"
@@ -197,7 +197,7 @@ function TabelPlugSetup() {
                                     </div>
 
                                     <button type="submit" className="w-100 btn btn-warning text-dark fw-medium">
-                                        {editingTable ? 'Update Table Type' : 'Add Table Type'}
+                                        {editingTable ? 'Update Table Type' : 'Add Table'}
                                     </button>
                                 </form>
 
@@ -294,7 +294,7 @@ function TabelPlugSetup() {
 
                                 <form className="mb-4">
                                     <div className="mb-3">
-                                        <label className="form-label">Select Table/Group</label>
+                                        <label className="form-label">Group name</label>
                                         <div className="position-relative">
                                             <button
                                                 type="button"
