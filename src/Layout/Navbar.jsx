@@ -4,7 +4,26 @@ import { Link } from "react-router-dom";
 import './Navbar.css';
 
 const Navbar = ({ toggleSidebar }) => {
-  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+ const [currentTime, setCurrentTime] = useState(
+  new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentTime(
+      new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      })
+    );
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, []);
+
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
