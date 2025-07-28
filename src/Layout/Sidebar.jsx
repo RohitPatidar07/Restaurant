@@ -15,6 +15,7 @@ import {
     faHome,
     faUsers,
     faFileAlt,
+    faUserTie,
     faDesktopAlt
 } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
@@ -26,7 +27,8 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
 
     // Define menu items based on roles
     const adminMenuItems = [
-        { name: "Staff Management", path: "/admin/staffmanagement", icon: faHome },
+        { name: "Dashboard", path: "/admin/dashboard", icon: faHome },
+        { name: "Staff Management", path: "/admin/staffmanagement", icon: faUserTie },
         { name: "Table & Plug Setup", path: "/admin/tableplugsetup", icon: faUserGear },
         { name: "Printer Setup", path: "/admin/printersetup", icon: faUsers },
         { name: "Business Settings", path: "/admin/businesssettings", icon: faFileAlt },

@@ -109,7 +109,7 @@ function TabelPlugSetup() {
                                         <FaTable className="text-dark" />
                                     </div>
                                     <h5 className=" fw-light text-dark mb-0">
-                                        {editingTable ? 'Edit Table Type' : 'Add/Edit Table Type'}
+                                        {editingTable ? 'Edit Table Type' : 'Add Table Type'}
                                     </h5>
                                 </div>
 

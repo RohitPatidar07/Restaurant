@@ -24,6 +24,7 @@ import SessionHistory from "./Component/UserDashboard/SessionHistory/SessionHist
 import Signup from "./Auth/Signup";
 import ForgotPassword from "./Auth/ForgotPassword";
 import Profile from "./Profile/Profile";
+import Dashboard from "./Component/AdminDashboard/Dashboard/Dashboard";
 
 function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -34,7 +35,7 @@ function App() {
     const checkIfMobile = () => {
       return window.innerWidth <= 768; // Standard mobile breakpoint
     };
-    
+
     if (checkIfMobile()) {
       setIsSidebarCollapsed(true);
     }
@@ -67,7 +68,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-         
+
         </Routes>
       ) : (
         <>
@@ -81,20 +82,17 @@ function App() {
               <Routes>
 
 
-                 {/* profile */}
-                        <Route path="/profile" element={<Profile />} />
-                      {/* profil end */}
+                {/* profile */}
+                <Route path="/profile" element={<Profile />} />
+                {/* profil end */}
 
 
-                      
+
                 {/* Admin Routes */}
                 <Route path="/admin/*" element={
                   <ProtectedRoute allowedRoles={["Admin"]}>
                     <Routes>
-
-                     
-
-                        
+                      <Route path="dashboard" element={<Dashboard />} />
                       <Route path="staffmanagement" element={<StaffManagement />} />
                       <Route path="businesssettings" element={<BusinessSettings />} />
                       <Route path="devicemonitor" element={<DeviceMonitor />} />

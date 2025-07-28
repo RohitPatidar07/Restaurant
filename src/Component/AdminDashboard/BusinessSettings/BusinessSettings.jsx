@@ -22,7 +22,7 @@ const BusinessSettings = () => {
   const [footerMessage, setFooterMessage] = useState(
     "Thank you for visiting GameZone Central! Follow us @gamezonecenter for latest updates and events."
   );
-  const [lastUpdated, setLastUpdated] = useState("January 15, 2025 at 2:30 PM");
+  const [lastUpdated, setLastUpdated] = useState("January 15, 2025 at 14:30 PM");
   const [lastModeChange, setLastModeChange] = useState("January 15, 2025 at 9:15 AM");
 
   const toggleMode = (mode) => {
@@ -41,7 +41,7 @@ const BusinessSettings = () => {
       day: 'numeric',
       hour: 'numeric',
       minute: '2-digit',
-      hour12: true
+      hour12: false
     });
     setLastModeChange(now);
   };
