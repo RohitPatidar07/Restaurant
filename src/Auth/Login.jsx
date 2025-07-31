@@ -60,7 +60,7 @@ const Login = () => {
         setTimeout(() => {
           switch (user.role) {
             case "Admin":
-              navigate("/admin/staffmanagement");
+              navigate("/admin/dashboard");
               break;
             case "Staff":
               navigate("/staff/tablesmanagement");
