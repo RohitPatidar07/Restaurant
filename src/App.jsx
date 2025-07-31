@@ -133,7 +133,7 @@ function App() {
 
                 {/* Redirect to appropriate dashboard based on role */}
                 <Route path="/" element={
-                  role === "Admin" ? <Navigate to="/admin/staffmanagement" /> :
+                  role === "Admin" ? <Navigate to="/admin/dashboard" /> :
                     role === "Staff" ? <Navigate to="/staff/tablesmanagement" /> :
                       role === "User" ? <Navigate to="/user/booktable" /> :
                         <Navigate to="/" />

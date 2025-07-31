@@ -98,7 +98,7 @@ const MyReservations = () => {
     return (
         <div className="p-3">
             {/* Header */}
-            <div className="mb-3">
+            <div className="mb-2">
                 <div className="d-flex align-items-center gap-3">
                     <h1 className="text-dark fs-3 fw-bold">My Reservations</h1>
                 </div>
@@ -279,7 +279,7 @@ const MyReservations = () => {
             )}
 
             {/* Custom CSS */}
-     
+
         </div>
     );
 };

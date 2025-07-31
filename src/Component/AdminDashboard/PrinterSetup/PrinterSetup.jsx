@@ -102,9 +102,9 @@ const PrinterSetup = () => {
     <div className="p-3">
       <div className="row">
         <div className="col-12">
-          <div className="d-flex align-items-center gap-3 mb-3">
+          <div className="d-flex align-items-center gap-3 mb-2">
            
-            <h2 className=" fw-bold text-dark d-flex align-items-center">Printer Setup</h2>
+            <h1 className="fs-3 fw-bold text-dark">Printer Setup</h1>
           </div>
       
         </div>

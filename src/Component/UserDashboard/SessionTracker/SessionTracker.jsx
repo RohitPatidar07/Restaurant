@@ -117,7 +117,7 @@ const SessionTracker = () => {
             </nav>
 
             {/* Main Content */}
-            <div className="mt-3">
+            <div className="mt-2">
                 {/* Session Info Card */}
                 <div className="mb-4">
                     <div className="bg-white rounded-3 shadow-sm p-4">

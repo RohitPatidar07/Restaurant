@@ -30,7 +30,7 @@ const Login = () => {
     try {
       // In a real app, you would make an API call here
       // const response = await authApi.login({ email, password, role: selectedRole });
-      
+
       // Mock users data - replace with actual API call in production
       const users = [
         { email: "admin@example.com", password: "123", role: "Admin" },
@@ -49,7 +49,7 @@ const Login = () => {
         // Store user data in localStorage
         localStorage.setItem("role", user.role);
         localStorage.setItem("isAuthenticated", "true");
-        
+
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
         } else {
@@ -58,7 +58,7 @@ const Login = () => {
 
         // Redirect based on role
         setTimeout(() => {
-          switch(user.role) {
+          switch (user.role) {
             case "Admin":
               navigate("/admin/staffmanagement");
               break;
@@ -76,7 +76,7 @@ const Login = () => {
         throw new Error("Invalid credentials or role");
       }
     } catch (error) {
-    //   toast.error(error.message || "Login failed. Please try again.");
+      //   toast.error(error.message || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +107,7 @@ const Login = () => {
                 className="navbar-logo m-2"
                 style={{ height: "50px" }}
               />
-              
+
 
             </div>
 
@@ -141,9 +141,8 @@ const Login = () => {
                   minLength="3"
                 />
                 <i
-                  className={`bi ${
-                    showPassword ? "bi-eye-slash" : "bi-eye"
-                  } position-absolute top-50 end-0 translate-middle-y me-3 text-secondary cursor-pointer`}
+                  className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"
+                    } position-absolute top-50 end-0 translate-middle-y me-3 text-secondary cursor-pointer`}
                   role="button"
                   onClick={() => setShowPassword(!showPassword)}
                 ></i>
@@ -160,9 +159,8 @@ const Login = () => {
                     {selectedRole || "Select Role"}
                   </span>
                   <i
-                    className={`bi bi-chevron-down ${
-                      showRoleDropdown ? "rotate-180" : ""
-                    }`}
+                    className={`bi bi-chevron-down ${showRoleDropdown ? "rotate-180" : ""
+                      }`}
                   ></i>
                 </div>
                 {showRoleDropdown && (
@@ -194,7 +192,7 @@ const Login = () => {
                     Remember Me
                   </label>
                 </div>
-                <Link to="/forgot-password" className=" text-decoration-none" style={{color:"#1f2937"}}>
+                <Link to="/forgot-password" className=" text-decoration-none" style={{ color: "#1f2937" }}>
                   Forgot Password?
                 </Link>
               </div>
@@ -217,7 +215,7 @@ const Login = () => {
 
               <div className="text-center">
                 <span className="text-muted">Don't have an account? </span>
-                <Link to="/signup" className=" text-decoration-none fw-semibold" style={{color:"#1f2937"}}>
+                <Link to="/signup" className=" text-decoration-none fw-semibold" style={{ color: "#1f2937" }}>
                   Sign Up
                 </Link>
               </div>
@@ -227,6 +225,9 @@ const Login = () => {
           {/* Right: Image */}
           <div className="col-md-6 d-none d-md-block">
             <div className="h-100 position-relative">
+
+              {/* https://i.postimg.cc/GpVFJDn8/create-image-for-resturant-and-game-zone-pool-for-login-page-right-side-image-do-not-write-anything.jpg */}
+
               <img
                 src="https://i.postimg.cc/GpVFJDn8/create-image-for-resturant-and-game-zone-pool-for-login-page-right-side-image-do-not-write-anything.jpg"
                 alt="Childcare Illustration"
@@ -236,7 +237,7 @@ const Login = () => {
                   borderBottomRightRadius: "2rem",
                 }}
               />
-            
+
             </div>
           </div>
         </div>

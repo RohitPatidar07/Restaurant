@@ -4,24 +4,24 @@ import { Link } from "react-router-dom";
 import './Navbar.css';
 
 const Navbar = ({ toggleSidebar }) => {
- const [currentTime, setCurrentTime] = useState(
-  new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
-);
+  const [currentTime, setCurrentTime] = useState(
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+  );
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setCurrentTime(
-      new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      })
-    );
-  }, 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(
+        new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        })
+      );
+    }, 1000);
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -46,10 +46,10 @@ useEffect(() => {
       <div className="navbar-content">
         {/* Left: Logo & Toggle Button */}
         <div className="d-flex align-items-center">
-          <Link to="/" className="navbar-brand">
-            <img 
-              src="https://i.postimg.cc/mZHz3k1Q/Whats-App-Image-2025-07-23-at-12-38-03-add5b5dd-removebg-preview-1.png" 
-              alt="Logo" 
+          <Link to="/" className="navbar-brand">         
+            <img
+              src="https://i.postimg.cc/mZHz3k1Q/Whats-App-Image-2025-07-23-at-12-38-03-add5b5dd-removebg-preview-1.png"
+              alt="Logo"
             />
           </Link>
           <button

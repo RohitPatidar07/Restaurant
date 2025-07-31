@@ -992,11 +992,11 @@ const TablesManagement = () => {
     );
 
     return (
-        <div className="">
+        <div className="p-3">
             {/* Main Content */}
             <div className="d-flex flex-column flex-grow-1 overflow-hidden">
                 {/* Header */}
-                <header className="p-4">
+                <header className="">
                     <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div>
                             <h1 className="fs-3 fw-bold text-dark">Tables Management</h1>
@@ -1015,7 +1015,7 @@ const TablesManagement = () => {
                 </header>
 
                 {/* Filter Bar */}
-                <div className="bg-white border-bottom p-3">
+                <div className="mt-3">
                     <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div className="d-flex align-items-center gap-2 gap-md-3 flex-wrap">
                             {/* Table Type Filter */}
@@ -1074,7 +1074,7 @@ const TablesManagement = () => {
                 </div>
 
                 {/* Tables Content */}
-                <div className="flex-grow-1 overflow-auto p-3 p-md-4">
+                <div className="flex-grow-1 overflow-auto mt-3">
                     {viewMode === 'grid' ? (
                         <div className="row g-3 g-md-4">
                             {filteredTables.map(table => (

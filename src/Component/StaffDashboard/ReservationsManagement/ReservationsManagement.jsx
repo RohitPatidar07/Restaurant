@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Table, Dropdown, Badge } from 'react-bootstrap';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import { 
-  Calendar, 
-  Person, 
-  Telephone, 
-  Table as TableIcon, 
-  Clock, 
-  Gear, 
-  GraphUp, 
-  Plus, 
-  ChevronLeft, 
-  ChevronRight 
+import {
+  Calendar,
+  Person,
+  Telephone,
+  Table as TableIcon,
+  Clock,
+  Gear,
+  GraphUp,
+  Plus,
+  ChevronLeft,
+  ChevronRight
 } from 'react-bootstrap-icons';
 
 const ReservationsManagement = () => {
@@ -117,14 +117,14 @@ const ReservationsManagement = () => {
 
   // Handle status change
   const handleStatusChange = (id, newStatus) => {
-    setReservations(reservations.map(res => 
+    setReservations(reservations.map(res =>
       res.id === id ? { ...res, status: newStatus } : res
     ));
   };
 
   // Filter reservations based on active filter
-  const filteredReservations = activeFilter === 'all' 
-    ? reservations 
+  const filteredReservations = activeFilter === 'all'
+    ? reservations
     : reservations.filter(res => res.status === activeFilter);
 
   // Get today's date in readable format
@@ -141,12 +141,12 @@ const ReservationsManagement = () => {
   };
 
   return (
-    <div className="">
+    <div className="p-3">
       {/* Sidebar */}
-     
+
 
       {/* Main Content */}
-      <div className="flex-grow-1 p-4">
+      <div className="flex-grow-1">
         <div className="mb-4">
           <h1 className="fs-3 fw-bold text-dark">Reservations Management</h1>
           <p className="text-muted">Manage customer reservations and bookings</p>
@@ -168,12 +168,12 @@ const ReservationsManagement = () => {
                         <Form.Label>Customer Name</Form.Label>
                         <div className="input-group">
                           <span className="input-group-text"><Person /></span>
-                          <Form.Control 
-                            type="text" 
+                          <Form.Control
+                            type="text"
                             name="customerName"
                             value={formData.customerName}
                             onChange={handleInputChange}
-                            placeholder="Enter customer name" 
+                            placeholder="Enter customer name"
                           />
                         </div>
                       </Form.Group>
@@ -184,12 +184,12 @@ const ReservationsManagement = () => {
                         <Form.Label>Phone Number</Form.Label>
                         <div className="input-group">
                           <span className="input-group-text"><Telephone /></span>
-                          <Form.Control 
-                            type="tel" 
+                          <Form.Control
+                            type="tel"
                             name="phoneNumber"
                             value={formData.phoneNumber}
                             onChange={handleInputChange}
-                            placeholder="Enter phone number" 
+                            placeholder="Enter phone number"
                           />
                         </div>
                       </Form.Group>
@@ -198,17 +198,33 @@ const ReservationsManagement = () => {
                     <Col md={6}>
                       <Form.Group>
                         <Form.Label>Table Type</Form.Label>
-                        <Dropdown show={showTableTypeDropdown} onToggle={(isOpen) => setShowTableTypeDropdown(isOpen)}>
-                          <Dropdown.Toggle variant="light" className="w-100 text-start d-flex justify-content-between align-items-center">
-                            {formData.tableType}
+                        <Dropdown
+                          show={showTableTypeDropdown}
+                          onToggle={(isOpen) => setShowTableTypeDropdown(isOpen)}
+                        >
+                          <Dropdown.Toggle
+                            className="w-100 text-dark text-start d-flex justify-content-between align-items-center"
+                            style={{ fontSize: "1rem", height: "38px", borderRadius: "6px", border: "1px solid #dee2e6", backgroundColor: "white" }}
+                          >
+                            {formData.tableType || "Select table type"}
                           </Dropdown.Toggle>
+
                           <Dropdown.Menu className="w-100">
-                            <Dropdown.Item onClick={() => handleTableTypeSelect('snooker', 'Snooker Table')}>Snooker Table</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleTableTypeSelect('pool', 'Pool Table')}>Pool Table</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleTableTypeSelect('playstation', 'PlayStation Station')}>PlayStation Station</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleTableTypeSelect('restaurant', 'Restaurant Table')}>Restaurant Table</Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleTableTypeSelect('snooker', 'Snooker Table')}>
+                              Snooker Table
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleTableTypeSelect('pool', 'Pool Table')}>
+                              Pool Table
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleTableTypeSelect('playstation', 'PlayStation Station')}>
+                              PlayStation Station
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleTableTypeSelect('restaurant', 'Restaurant Table')}>
+                              Restaurant Table
+                            </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
+
                       </Form.Group>
                     </Col>
 
@@ -217,8 +233,8 @@ const ReservationsManagement = () => {
                         <Form.Label>Date</Form.Label>
                         <div className="input-group">
                           <span className="input-group-text"><Calendar /></span>
-                          <Form.Control 
-                            type="date" 
+                          <Form.Control
+                            type="date"
                             name="date"
                             value={formData.date}
                             onChange={handleInputChange}
@@ -232,8 +248,8 @@ const ReservationsManagement = () => {
                         <Form.Label>Time</Form.Label>
                         <div className="input-group">
                           <span className="input-group-text"><Clock /></span>
-                          <Form.Control 
-                            type="time" 
+                          <Form.Control
+                            type="time"
                             name="time"
                             value={formData.time}
                             onChange={handleInputChange}
@@ -253,7 +269,7 @@ const ReservationsManagement = () => {
 
           <Col lg={4}>
             <Card className="mb-4">
-          
+
             </Card>
 
             <Card>
@@ -288,34 +304,34 @@ const ReservationsManagement = () => {
               <h2 className="h5 mb-2 mb-md-0">Today's Reservations</h2>
               <div className="text-muted small">{todayFormatted}</div>
             </div>
-            
+
             <div className="d-flex flex-wrap gap-2 mb-4 ">
-              <Button 
-           className='bg-warning'
-                size="sm" 
+              <Button
+                className='bg-warning'
+                size="sm"
                 onClick={() => setActiveFilter('all')}
               >
                 All
               </Button>
-              <Button 
-                variant={activeFilter === 'confirmed' ? 'warning' : 'light'} 
-                size="sm" 
+              <Button
+                variant={activeFilter === 'confirmed' ? 'warning' : 'light'}
+                size="sm"
                 className="text-primary"
                 onClick={() => setActiveFilter('confirmed')}
               >
                 Confirmed
               </Button>
-              <Button 
-                variant={activeFilter === 'arrived' ? 'warning' : 'light'} 
-                size="sm" 
+              <Button
+                variant={activeFilter === 'arrived' ? 'warning' : 'light'}
+                size="sm"
                 className="text-success"
                 onClick={() => setActiveFilter('arrived')}
               >
                 Arrived
               </Button>
-              <Button 
-                variant={activeFilter === 'cancelled' ? 'warning' : 'light'} 
-                size="sm" 
+              <Button
+                variant={activeFilter === 'cancelled' ? 'warning' : 'light'}
+                size="sm"
                 className="text-danger"
                 onClick={() => setActiveFilter('cancelled')}
               >
@@ -356,17 +372,17 @@ const ReservationsManagement = () => {
                       <td>
                         {reservation.status === 'confirmed' ? (
                           <>
-                            <Button 
-                              variant="success" 
-                              size="sm" 
+                            <Button
+                              variant="success"
+                              size="sm"
                               className="me-2 mb-2"
                               onClick={() => handleStatusChange(reservation.id, 'arrived')}
                             >
                               Mark Arrived
                             </Button>
-                            <Button 
-                            className='mb-2'
-                              variant="danger" 
+                            <Button
+                              className='mb-2'
+                              variant="danger"
                               size="sm"
                               onClick={() => handleStatusChange(reservation.id, 'cancelled')}
                             >
@@ -375,8 +391,8 @@ const ReservationsManagement = () => {
                           </>
                         ) : (
                           <span className="text-muted small">
-                            {reservation.status === 'arrived' 
-                              ? 'No actions available' 
+                            {reservation.status === 'arrived'
+                              ? 'No actions available'
                               : reservation.status === 'cancelled' && 'Cancelled by customer'}
                           </span>
                         )}

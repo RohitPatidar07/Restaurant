@@ -88,11 +88,11 @@ const KOTQueue = () => {
     };
 
     return (
-        <div className=''>
+        <div className='p-3'>
             {/* Main Content */}
             <div className="">
                 {/* Header */}
-                <header className="p-4">
+                <header className="">
                     <div className=" d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center gap-3">
                             <div>
@@ -115,7 +115,7 @@ const KOTQueue = () => {
                 </header>
 
                 {/* Content */}
-                <div className="kot-content-container p-4">
+                <div className="kot-content-container">
                     {/* Tab Navigation */}
                     <div className="kot-tab-navigation mb-4">
                         <div className="kot-tab-buttons bg-light p-1 rounded d-inline-flex">

@@ -50,7 +50,6 @@ const Profile = () => {
             required
           />
         </div>
-
         <div className="mb-3">
           <label className="form-label">Email</label>
           <input
@@ -63,7 +62,6 @@ const Profile = () => {
             required
           />
         </div>
-
         <div className="mb-3">
           <label className="form-label">Address</label>
           <textarea
@@ -76,7 +74,6 @@ const Profile = () => {
             required
           />
         </div>
-
         <button type="submit" className="btn btn-warning text-white">Update Profile</button>
       </form>
 

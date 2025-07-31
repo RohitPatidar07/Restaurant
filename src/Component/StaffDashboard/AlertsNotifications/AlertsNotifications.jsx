@@ -132,9 +132,9 @@ const AlertsNotifications = () => {
   `;
 
   return (
-    <div className="container-fluid p-3 p-md-4" style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
+    <div className="container-fluid p-3">
       <style>{styles}</style>
-      
+
       <h1 className="fs-3 fw-bold text-dark">Alerts & Notifications</h1>
       <p className="text-muted mb-3 mb-md-4 text-start">Monitor table timeouts and reservation reminders in real-time</p>
 
@@ -153,7 +153,7 @@ const AlertsNotifications = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="col">
           <div className="card stats-card h-100 shadow-sm">
             <div className="card-body d-flex justify-content-between align-items-center">
@@ -167,7 +167,7 @@ const AlertsNotifications = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="col">
           <div className="card stats-card h-100 shadow-sm">
             <div className="card-body d-flex justify-content-between align-items-center">
@@ -181,7 +181,7 @@ const AlertsNotifications = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="col">
           <div className="card stats-card h-100 shadow-sm">
             <div className="card-body d-flex justify-content-between align-items-center">
@@ -208,7 +208,7 @@ const AlertsNotifications = () => {
                 {alertStatus.tableTimeoutAlerts} Active
               </span>
             </div>
-            
+
             {notifications.tableAlerts.map(alert => (
               <div key={alert.id} className={`alert-item alert-${alert.color}`}>
                 <div className="d-flex justify-content-between align-items-start mb-2">
@@ -218,7 +218,7 @@ const AlertsNotifications = () => {
                   </div>
                   <span className={`badge bg-${alert.color} text-white`}>{alert.status}</span>
                 </div>
-                
+
                 <ul className="alert-details">
                   <li className={`fw-medium text-${alert.color}`}>{alert.message}</li>
                   <li className={`small text-${alert.color}`}>Started: {alert.startTime} • Expected End: {alert.endTime}</li>
@@ -259,14 +259,14 @@ const AlertsNotifications = () => {
                 {alertStatus.reservationReminders} Pending
               </span>
             </div>
-            
+
             {notifications.reservations.map(reservation => (
               <div key={reservation.id} className={`alert-item alert-${reservation.color}`}>
                 <div className="d-flex justify-content-between align-items-start mb-2">
                   <h5 className={`fw-bold mb-1 text-${reservation.color}`}>{reservation.customer}</h5>
                   <span className={`badge bg-${reservation.color} text-white`}>{reservation.status}</span>
                 </div>
-                
+
                 <ul className="alert-details">
                   <li className={`fw-medium text-${reservation.color}`}>{reservation.details}</li>
                   <li className={`text-${reservation.color}`}>Reservation: {reservation.time}</li>

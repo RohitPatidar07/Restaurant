@@ -616,10 +616,10 @@ const ReportsAnalytics = () => {
     <div className="p-3">
       <div className="">
         <div className="">
-          <h2 className="fw-bold text-dark d-flex align-items-center mb-4">Reports & Analytics</h2>
+          <h1 className="fs-3 fw-bold text-dark">Reports & Analytics</h1>
 
           {/* Report Controls Section */}
-          <div className="bg-white rounded shadow-sm p-3 mb-3">
+          <div className="bg-white rounded shadow-sm p-3 mb-3 mt-3">
             <Row className="gy-2 gx-3 align-items-end">
               <Col lg={2} md={3} sm={6} xs={12}>
                 <Form.Group>

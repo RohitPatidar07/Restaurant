@@ -205,10 +205,10 @@ const Dashboard = () => {
         <div className="p-3">
             <div className="">
                 <div className="">
-                    <h2 className="fw-bold text-dark d-flex align-items-center">Dashboard Overview</h2>
+                    <h1 className="fs-3 fw-bold text-dark">Dashboard Overview</h1>
 
                     {/* KPI Cards */}
-                    <div className="row g-4 mb-3 mt-2">
+                    <div className="row g-4 mb-3 mt-1">
                         {kpis.map((item, idx) => (
                             <div key={idx} className="col-md-4">
                                 <div className="card p-4 rounded shadow-sm bg-white h-100 border-0">

@@ -207,14 +207,14 @@ const OrdersManagement = () => {
                 <RiRefreshLine className="me-1 me-md-2" />
                 <span className="d-none d-md-inline">Refresh</span>
               </button>
-              <button
+              {/* <button
                 className="btn btn-dark d-flex align-items-center btn-sm"
                 onClick={openNewOrderModal}
               >
                 <RiAddLine className="me-1 me-md-2" />
                 <span className="d-none d-md-inline">New Order</span>
                 <span className="d-md-none">New</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -582,66 +582,67 @@ const OrdersManagement = () => {
           </div>
 
           {/* Cart Panel - Desktop */}
-          <div className="d-none d-md-flex flex-column border-start bg-white" style={{ width: '1300px', scrollbarWidth: 'none' }}>
-            <div className="p-4 border-bottom">
-              <h2 className="h5 fw-semibold mb-2">Order Summary</h2>
-              <div className="small text-muted">
-                <p>Table: <span className="fw-medium text-dark">{selectedTable || 'Not Selected'}</span></p>
-                <p>Time: <span className="fw-medium text-dark">2:45 PM</span></p>
-              </div>
+     
+<div className="d-none d-md-flex flex-column border-start bg-white" style={{ width: '350px', minWidth: '350px', scrollbarWidth: 'none' }}>
+  <div className="p-4 border-bottom">
+    <h2 className="h5 fw-semibold mb-2">Order Summary</h2>
+    <div className="small text-muted">
+      <p>Table: <span className="fw-medium text-dark">{selectedTable || 'Not Selected'}</span></p>
+      <p>Time: <span className="fw-medium text-dark">2:45 PM</span></p>
+    </div>
+  </div>
+  <div className="flex-grow-1 p-4 overflow-auto">
+    {cart.size === 0 ? (
+      <div className="text-center text-muted py-4">
+        <RiShoppingCartLine size={48} className="mb-3 text-muted" />
+        <p>No items in cart</p>
+        <p className="small">Add items from menu</p>
+      </div>
+    ) : (
+      <div className="d-flex flex-column gap-3">
+        {Array.from(cart.values()).map(item => (
+          <div key={item.id} className="d-flex justify-content-between py-3 border-bottom">
+            <div className="flex-grow-1">
+              <h4 className="fw-medium">{item.name}</h4>
+              <p className="small text-muted">${item.price.toFixed(2)} × {item.quantity}</p>
             </div>
-            <div className="flex-grow-1 p-4 overflow-auto">
-              {cart.size === 0 ? (
-                <div className="text-center text-muted py-4">
-                  <RiShoppingCartLine size={48} className="mb-3 text-muted" />
-                  <p>No items in cart</p>
-                  <p className="small">Add items from menu</p>
-                </div>
-              ) : (
-                <div className="d-flex flex-column gap-3">
-                  {Array.from(cart.values()).map(item => (
-                    <div key={item.id} className="d-flex justify-content-between py-3 border-bottom">
-                      <div className="flex-grow-1">
-                        <h4 className="fw-medium">{item.name}</h4>
-                        <p className="small text-muted">${item.price.toFixed(2)} × {item.quantity}</p>
-                      </div>
-                      <span className="fw-semibold">${(item.price * item.quantity).toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="p-4 border-top">
-              <div className="mb-3">
-                <div className="d-flex justify-content-between small mb-1">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="d-flex justify-content-between small mb-2">
-                  <span>Tax (8%)</span>
-                  <span>${tax.toFixed(2)}</span>
-                </div>
-                <div className="d-flex justify-content-between fw-semibold border-top pt-2">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
-              </div>
-              <button
-                className={`btn w-100 mb-2 d-flex align-items-center justify-content-center ${cart.size === 0 ? 'btn-secondary disabled' : 'btn-dark'}`}
-                disabled={cart.size === 0}
-                onClick={sendToKitchen}
-              >
-                <RiPrinterLine className="me-2" />
-                Send to Kitchen/Bar
-              </button>
-              <button
-                className="btn btn-outline-secondary w-100"
-                onClick={clearCart}
-              >
-                Clear Cart
-              </button>
-            </div>
+            <span className="fw-semibold">${(item.price * item.quantity).toFixed(2)}</span>
           </div>
+        ))}
+      </div>
+    )}
+  </div>
+  <div className="p-4 border-top">
+    <div className="mb-3">
+      <div className="d-flex justify-content-between small mb-1">
+        <span>Subtotal</span>
+        <span>${subtotal.toFixed(2)}</span>
+      </div>
+      <div className="d-flex justify-content-between small mb-2">
+        <span>Tax (8%)</span>
+        <span>${tax.toFixed(2)}</span>
+      </div>
+      <div className="d-flex justify-content-between fw-semibold border-top pt-2">
+        <span>Total</span>
+        <span>${total.toFixed(2)}</span>
+      </div>
+    </div>
+    <button
+      className={`btn w-100 mb-2 d-flex align-items-center justify-content-center ${cart.size === 0 ? 'btn-secondary disabled' : 'btn-dark'}`}
+      disabled={cart.size === 0}
+      onClick={sendToKitchen}
+    >
+      <RiPrinterLine className="me-2" />
+      Send to Kitchen/Bar
+    </button>
+    <button
+      className="btn btn-outline-secondary w-100"
+      onClick={clearCart}
+    >
+      Clear Cart
+    </button>
+  </div>
+</div>
         </div>
       </div>
 

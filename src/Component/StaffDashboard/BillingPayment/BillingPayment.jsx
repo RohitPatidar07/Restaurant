@@ -81,14 +81,12 @@ const BillingPayment = () => {
 
     return (
         <div className="p-3">
-
-
             {/* Main Content */}
             <div className="">
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
-                    <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 mb-md-5">
-                        <div className="mb-3 mb-md-0">
+                    <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3">
+                        <div className="">
                             <h1 className="fs-3 fw-bold text-dark">Billing & Payment</h1>
                             <p className="text-muted mb-0">Manage session billing and process payments</p>
                         </div>

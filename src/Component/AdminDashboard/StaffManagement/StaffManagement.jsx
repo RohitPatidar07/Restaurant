@@ -901,7 +901,7 @@ const StaffManagement = () => {
     <div className="p-3">
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <div>
-          <h1 className="h4 fw-bold text-dark mb-0">Staff Management</h1>
+          <h1 className="fs-3 fw-bold text-dark">Staff Management</h1>
           <p className="text-muted small mb-0">
             Manage staff members and their access permissions
           </p>
