@@ -1,28 +1,62 @@
 import React, { useState } from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import {
-    FaGamepad, FaBell, FaUser, FaTachometerAlt, FaMoneyBillAlt,
-    FaTable, FaUsers, FaChartBar, FaCog, FaTableTennis,
-    FaClock, FaPlug, FaPlus, FaAngleDown, FaEdit,
-    FaTrashAlt, FaPlay, FaStop, FaTimes
+    FaGamepad, FaTable, FaUsers, FaEdit,
+    FaTrashAlt, FaPlay, FaStop, FaTimes,
+    FaTableTennis, FaClock, FaPlug, FaPlus, FaAngleDown
 } from 'react-icons/fa';
 
-function TabelPlugSetup() {
-    const [selectedTableType, setSelectedTableType] = useState('Select table type');
-    const [selectedRateTable, setSelectedRateTable] = useState('Select table or group');
-    const [selectedPlugTable, setSelectedPlugTable] = useState('Select table');
+function TablePlugSetup() {
+    // State for table management
+    const [tables, setTables] = useState([
+        { id: 1, name: 'Snooker Table 1', type: 'Snooker', status: 'active', plugId: 'PLUG_001' },
+        { id: 2, name: 'Pool Table A', type: 'Pool', status: 'active', plugId: 'PLUG_002' },
+        { id: 3, name: 'PlayStation Zone 1', type: 'PlayStation', status: 'active', plugId: 'PLUG_003' }
+    ]);
+    
+    // State for table groups
+    const [groups, setGroups] = useState([
+        { id: 1, name: 'Premium Snooker Group', tableIds: [1], hourlyRate: 15, fixedRate: 50, discount: 10 },
+        { id: 2, name: 'Standard Pool Group', tableIds: [2], hourlyRate: 12, fixedRate: 40, discount: 5 }
+    ]);
+    
+    // Form states
+    const [tableForm, setTableForm] = useState({
+        name: '',
+        type: 'Select table type',
+        status: 'active',
+        plugId: ''
+    });
+    
+    const [groupForm, setGroupForm] = useState({
+        name: '',
+        selectedTables: [],
+        hourlyRate: '',
+        fixedRate: '',
+        discount: ''
+    });
+    
+    const [rateForm, setRateForm] = useState({
+        selectedTableOrGroup: 'Select table or group',
+        hourlyRate: '',
+        fixedRate: '',
+        discount: ''
+    });
+    
+    // UI states
     const [tableTypeDropdownOpen, setTableTypeDropdownOpen] = useState(false);
     const [rateTableDropdownOpen, setRateTableDropdownOpen] = useState(false);
     const [plugTableDropdownOpen, setPlugTableDropdownOpen] = useState(false);
     const [groupModalOpen, setGroupModalOpen] = useState(false);
+    const [tableModalOpen, setTableModalOpen] = useState(false);
     const [editingTable, setEditingTable] = useState(null);
-    const [tableStatus, setTableStatus] = useState('active');
+    const [editingGroup, setEditingGroup] = useState(null);
     const [plugStatus, setPlugStatus] = useState({
         PLUG_001: 'online',
         PLUG_002: 'offline',
         PLUG_003: 'online'
     });
 
+    // Toggle dropdown menus
     const toggleDropdown = (dropdownType) => {
         switch (dropdownType) {
             case 'tableType':
@@ -45,94 +79,512 @@ function TabelPlugSetup() {
         }
     };
 
-    const selectTableType = (type) => {
-        setSelectedTableType(type);
-        setTableTypeDropdownOpen(false);
+    // Handle table form changes
+    const handleTableFormChange = (e) => {
+        const { name, value } = e.target;
+        setTableForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const selectRateTable = (table) => {
-        setSelectedRateTable(table);
-        setRateTableDropdownOpen(false);
+    // Handle group form changes
+    const handleGroupFormChange = (e) => {
+        const { name, value } = e.target;
+        setGroupForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const selectPlugTable = (table) => {
-        setSelectedPlugTable(table);
-        setPlugTableDropdownOpen(false);
+    // Handle table selection for groups
+    const handleTableSelection = (tableId) => {
+        setGroupForm(prev => {
+            const newSelectedTables = prev.selectedTables.includes(tableId)
+                ? prev.selectedTables.filter(id => id !== tableId)
+                : [...prev.selectedTables, tableId];
+            return { ...prev, selectedTables: newSelectedTables };
+        });
     };
 
-    const editTable = (name, type, status) => {
-        setEditingTable({ name, type, status });
-        setSelectedTableType(type);
-        setTableStatus(status);
-    };
-
+    // Submit table form (add or edit)
     const handleTableSubmit = (e) => {
         e.preventDefault();
         if (editingTable) {
-            console.log('Updating table:', editingTable.name);
+            // Update existing table
+            setTables(tables.map(table => 
+                table.id === editingTable.id ? { ...tableForm, id: editingTable.id } : table
+            ));
             setEditingTable(null);
         } else {
-            console.log('Adding new table');
+            // Add new table
+            const newTable = {
+                id: Math.max(...tables.map(t => t.id), 0) + 1,
+                ...tableForm
+            };
+            setTables([...tables, newTable]);
+            setPlugStatus(prev => ({ ...prev, [newTable.plugId]: 'offline' }));
         }
+        // Reset form and close modal
+        setTableForm({
+            name: '',
+            type: 'Select table type',
+            status: 'active',
+            plugId: ''
+        });
+        setTableModalOpen(false);
     };
 
+    // Submit group form
+    const handleGroupSubmit = (e) => {
+        e.preventDefault();
+        const groupData = {
+            name: groupForm.name,
+            tableIds: groupForm.selectedTables,
+            hourlyRate: parseFloat(groupForm.hourlyRate),
+            fixedRate: parseFloat(groupForm.fixedRate),
+            discount: parseFloat(groupForm.discount) || 0
+        };
+
+        if (editingGroup) {
+            // Update existing group
+            setGroups(groups.map(group => 
+                group.id === editingGroup.id ? { ...groupData, id: editingGroup.id } : group
+            ));
+        } else {
+            // Add new group
+            const newGroup = {
+                id: Math.max(...groups.map(g => g.id), 0) + 1,
+                ...groupData
+            };
+            setGroups([...groups, newGroup]);
+        }
+        
+        setGroupModalOpen(false);
+        // Reset form
+        setGroupForm({
+            name: '',
+            selectedTables: [],
+            hourlyRate: '',
+            fixedRate: '',
+            discount: ''
+        });
+        setEditingGroup(null);
+    };
+
+    // Open modal to add new table
+    const openAddTableModal = () => {
+        setEditingTable(null);
+        setTableForm({
+            name: '',
+            type: 'Select table type',
+            status: 'active',
+            plugId: ''
+        });
+        setTableModalOpen(true);
+    };
+
+    // Open modal to edit existing table
+    const openEditTableModal = (table) => {
+        setEditingTable(table);
+        setTableForm({
+            name: table.name,
+            type: table.type,
+            status: table.status,
+            plugId: table.plugId || ''
+        });
+        setTableModalOpen(true);
+    };
+
+    // Open modal to edit existing group
+    const openEditGroupModal = (group) => {
+        setEditingGroup(group);
+        setGroupForm({
+            name: group.name,
+            selectedTables: group.tableIds,
+            hourlyRate: group.hourlyRate,
+            fixedRate: group.fixedRate,
+            discount: group.discount
+        });
+        setGroupModalOpen(true);
+    };
+
+    // Open modal to add new group
+    const openAddGroupModal = () => {
+        setEditingGroup(null);
+        setGroupForm({
+            name: '',
+            selectedTables: [],
+            hourlyRate: '',
+            fixedRate: '',
+            discount: ''
+        });
+        setGroupModalOpen(true);
+    };
+
+   // Delete table
+const deleteTable = (tableId) => {
+    setTables(tables.filter(table => table.id !== tableId));
+    
+    // Also remove from any groups
+    setGroups(
+        groups
+            .map(group => ({
+                ...group,
+                tableIds: group.tableIds.filter(id => id !== tableId)
+            }))
+            .filter(group => group.tableIds.length > 0) // <- missing closing parenthesis was here
+    );
+};
+
+
+    // Delete group
+    const deleteGroup = (groupId) => {
+        setGroups(groups.filter(group => group.id !== groupId));
+    };
+
+    // Toggle plug status
     const togglePlug = (plugId, action) => {
-        console.log(`${action.toUpperCase()} plug ${plugId}`);
         setPlugStatus(prev => ({
             ...prev,
             [plugId]: action === 'on' ? 'online' : 'offline'
         }));
     };
 
-    const handleGroupSubmit = (e) => {
-        e.preventDefault();
-        console.log('Creating new group');
-        setGroupModalOpen(false);
+    // Get table name by ID
+    const getTableNameById = (id) => {
+        const table = tables.find(t => t.id === id);
+        return table ? table.name : 'Unknown Table';
     };
 
     return (
         <div className="p-3">
+            {/* Main Content */}
             <div className="">
-                {/* Main Content */}
-                <div className="">
-                    <div className="mb-4">
-                        <h1 className="fs-3 fw-bold text-dark">Table & Plug Setup</h1>
-                        <p className="text-muted">Manage table types, configure rates, and control smart plugs</p>
-                    </div>
+                <div className="mb-4">
+                    <h1 className="fs-3 fw-bold text-dark">Table & Plug Setup</h1>
+                    <p className="text-muted">Manage table types, configure rates, and control smart plugs</p>
+                </div>
 
-                    <div className="row g-4">
-                        {/* Add/Edit Table Type Section */}
-                        <div className="col-12 col-xl-6">
-                            <div className="bg-white rounded shadow-sm p-3 p-md-4 h-100">
-                                <div className="d-flex align-items-center gap-3 mb-4">
+                <div className="row g-4">
+                    {/* Table Management Section */}
+                    <div className="col-12 col-xl-6">
+                        <div className="bg-white rounded shadow-sm p-3 p-md-4 h-100">
+                            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+                                <div className="d-flex align-items-center gap-3">
                                     <div className="bg-warning rounded p-2">
                                         <FaTable className="text-dark" />
                                     </div>
-                                    <h5 className=" fw-light text-dark mb-0">
-                                        {editingTable ? 'Edit Table Type' : 'Add Table'}
-                                    </h5>
+                                    <h5 className="fw-light text-dark mb-0">Existing Tables</h5>
+                                </div>
+                                <div className='d-flex justify-content-end'>
+                                    <button 
+                                        className='btn btn-warning'
+                                        onClick={openAddTableModal}
+                                    >
+                                        Add Table
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            {/* Table List */}
+                            <div className="border rounded overflow-hidden">
+                                <div className="divide-y">
+                                    {tables.map(table => (
+                                        <div key={table.id} className="px-3 py-2 d-flex justify-content-between align-items-center hover-bg-warning-subtle">
+                                            <div className="d-flex align-items-center gap-3">
+                                                {table.type === 'Snooker' && <FaTableTennis className="text-success fs-5" />}
+                                                {table.type === 'Pool' && <FaTableTennis className="text-primary fs-5" />}
+                                                {table.type === 'PlayStation' && <FaGamepad className="text-purple fs-5" />}
+                                                <div>
+                                                    <div className="fw-medium text-dark">{table.name}</div>
+                                                    <div className="text-muted small">
+                                                        {table.type} • {table.status} {table.plugId && `• Plug: ${table.plugId}`}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="d-flex gap-2">
+                                                <button
+                                                    className="btn btn-sm btn-outline-warning"
+                                                    onClick={() => openEditTableModal(table)}
+                                                >
+                                                    <FaEdit />
+                                                </button>
+                                                <button
+                                                    className="btn btn-sm btn-outline-danger"
+                                                    onClick={() => deleteTable(table.id)}
+                                                >
+                                                    <FaTrashAlt />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {tables.length === 0 && (
+                                        <div className="px-3 py-4 text-center text-muted">
+                                            No tables added yet
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Group Management Section */}
+                    <div className="col-12 col-xl-6">
+                        <div className="bg-white rounded shadow-sm p-3 p-md-4 h-100">
+                            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+                                <div className="d-flex align-items-center gap-3">
+                                    <div className="bg-warning rounded p-2">
+                                        <FaClock className="text-dark" />
+                                    </div>
+                                    <h5 className="fw-light text-dark mb-0">Existing Groups</h5>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="btn btn-warning text-dark d-flex align-items-center gap-2"
+                                    onClick={openAddGroupModal}
+                                >
+                                    <FaPlus />
+                                    <span>Create Group</span>
+                                </button>
+                            </div>
+
+                            {/* Groups List */}
+                            <div className="border rounded overflow-hidden mb-4">
+                                <div className="divide-y">
+                                    {groups.map(group => (
+                                        <div key={group.id} className="px-3 py-2 d-flex justify-content-between align-items-center hover-bg-warning-subtle">
+                                            <div>
+                                                <div className="fw-medium text-dark">{group.name}</div>
+                                                <div className="text-muted small">
+                                                    Tables: {group.tableIds.map(id => getTableNameById(id)).join(', ')}
+                                                </div>
+                                                <div className="text-muted small">
+                                                    Rates: ${group.hourlyRate}/hr, ${group.fixedRate} fixed {group.discount > 0 && `(${group.discount}% discount)`}
+                                                </div>
+                                            </div>
+                                            <div className="d-flex gap-2">
+                                                <button
+                                                    className="btn btn-sm btn-outline-warning"
+                                                    onClick={() => openEditGroupModal(group)}
+                                                >
+                                                    <FaEdit />
+                                                </button>
+                                                <button
+                                                    className="btn btn-sm btn-outline-danger"
+                                                    onClick={() => deleteGroup(group.id)}
+                                                >
+                                                    <FaTrashAlt />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {groups.length === 0 && (
+                                        <div className="px-3 py-4 text-center text-muted">
+                                            No groups created yet
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Rate Preview */}
+                            {rateForm.selectedTableOrGroup !== 'Select table or group' && (
+                                <div className="bg-dark text-white rounded p-3">
+                                    <h4 className="fw-medium mb-3">Rate Preview</h4>
+                                    <div className="small">
+                                        <div className="d-flex justify-content-between mb-2">
+                                            <span>Hourly Rate:</span>
+                                            <span>${rateForm.hourlyRate || '0.00'}/hour</span>
+                                        </div>
+                                        <div className="d-flex justify-content-between mb-2">
+                                            <span>Fixed Rate:</span>
+                                            <span>${rateForm.fixedRate || '0.00'}/session</span>
+                                        </div>
+                                        {rateForm.discount > 0 && (
+                                            <div className="d-flex justify-content-between">
+                                                <span>With {rateForm.discount}% Discount:</span>
+                                                <span>${(rateForm.hourlyRate * (1 - rateForm.discount/100)).toFixed(2) || '0.00'}/hour</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Smart Plug Mapping Section */}
+                    <div className="col-12">
+                        <div className="bg-white rounded shadow-sm p-3 p-md-4">
+                            <div className="d-flex align-items-center gap-3 mb-4">
+                                <div className="bg-warning rounded p-2">
+                                    <FaPlug className="text-dark" />
+                                </div>
+                                <h5 className="fw-light text-dark mb-0">Map Smart Plug (ON/OFF Control)</h5>
+                            </div>
+
+                            <div className="row g-4">
+                                {/* Plug Assignment Form */}
+                                <div className="col-12 col-lg-6">
+                                    <h4 className="fw-medium text-dark mb-3">Assign Smart Plug</h4>
+                                    <form>
+                                        <div className="mb-3">
+                                            <label className="form-label">Select Table</label>
+                                            <div className="position-relative">
+                                                <button
+                                                    type="button"
+                                                    className="form-control text-start d-flex justify-content-between align-items-center"
+                                                    onClick={() => toggleDropdown('plugTable')}
+                                                >
+                                                    <span>{tableForm.name || 'Select table'}</span>
+                                                    <FaAngleDown />
+                                                </button>
+                                                {plugTableDropdownOpen && (
+                                                    <div className="position-absolute top-100 start-0 end-0 bg-white border rounded mt-1 shadow-lg z-3">
+                                                        <div className="py-1">
+                                                            {tables.map(table => (
+                                                                <button
+                                                                    key={table.id}
+                                                                    type="button"
+                                                                    className="w-100 text-start btn btn-light"
+                                                                    onClick={() => {
+                                                                        setTableForm(prev => ({ ...prev, name: table.name }));
+                                                                        setPlugTableDropdownOpen(false);
+                                                                    }}
+                                                                >
+                                                                    {table.name}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <label className="form-label">Smart Plug ID</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Enter plug ID (e.g., PLUG_001)"
+                                                value={tableForm.plugId}
+                                                onChange={(e) => setTableForm(prev => ({ ...prev, plugId: e.target.value }))}
+                                            />
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            className="w-100 btn btn-warning text-dark fw-medium"
+                                            onClick={() => {
+                                                if (tableForm.name && tableForm.plugId) {
+                                                    const updatedTables = tables.map(table =>
+                                                        table.name === tableForm.name
+                                                            ? { ...table, plugId: tableForm.plugId }
+                                                            : table
+                                                    );
+                                                    setTables(updatedTables);
+                                                    setPlugStatus(prev => ({ ...prev, [tableForm.plugId]: 'offline' }));
+                                                    setTableForm(prev => ({ ...prev, plugId: '' }));
+                                                }
+                                            }}
+                                        >
+                                            Map Smart Plug
+                                        </button>
+                                    </form>
                                 </div>
 
-                                <form onSubmit={handleTableSubmit} className="mb-4">
+                                {/* Plug Control Panel */}
+                                <div className="col-12 col-lg-6">
+                                    <h4 className="fw-medium text-dark mb-3">Smart Plug Control</h4>
+                                    <div className="d-flex flex-column gap-3">
+                                        {tables.filter(table => table.plugId).map(table => (
+                                            <div key={table.id} className="border rounded p-3">
+                                                <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
+                                                    <div className="d-flex align-items-center gap-3">
+                                                        {table.type === 'Snooker' && <FaTableTennis className="text-success fs-5" />}
+                                                        {table.type === 'Pool' && <FaTableTennis className="text-primary fs-5" />}
+                                                        {table.type === 'PlayStation' && <FaGamepad className="text-purple fs-5" />}
+                                                        <div>
+                                                            <div className="fw-medium text-dark">{table.name}</div>
+                                                            <div className="text-muted small">Plug ID: {table.plugId}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="d-flex align-items-center gap-2">
+                                                        <div className={`rounded-circle ${plugStatus[table.plugId] === 'online' ? 'bg-success' : 'bg-danger'}`} style={{ width: '12px', height: '12px' }}></div>
+                                                        <span className={`small fw-medium ${plugStatus[table.plugId] === 'online' ? 'text-success' : 'text-danger'}`}>
+                                                            {plugStatus[table.plugId] === 'online' ? 'ONLINE' : 'OFFLINE'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="d-flex gap-3">
+                                                    <button
+                                                        className={`btn flex-grow-1 ${plugStatus[table.plugId] === 'online' ? 'btn-success' : 'btn-secondary'}`}
+                                                        onClick={() => togglePlug(table.plugId, 'on')}
+                                                        disabled={plugStatus[table.plugId] === 'online'}
+                                                    >
+                                                        <div className="d-flex align-items-center justify-content-center gap-2">
+                                                            <FaPlay />
+                                                            <span>Turn ON</span>
+                                                        </div>
+                                                    </button>
+                                                    <button
+                                                        className={`btn flex-grow-1 ${plugStatus[table.plugId] === 'offline' ? 'btn-danger' : 'btn-secondary'}`}
+                                                        onClick={() => togglePlug(table.plugId, 'off')}
+                                                        disabled={plugStatus[table.plugId] === 'offline'}
+                                                    >
+                                                        <div className="d-flex align-items-center justify-content-center gap-2">
+                                                            <FaStop />
+                                                            <span>Turn OFF</span>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {tables.filter(table => table.plugId).length === 0 && (
+                                            <div className="border rounded p-4 text-center text-muted">
+                                                No tables with smart plugs configured
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Table Management Modal */}
+            {tableModalOpen && (
+                <div className="modal show d-block bg-dark bg-opacity-50" tabIndex="-1" style={{ zIndex: 1050 }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">
+                                    {editingTable ? 'Edit Table' : 'Add Table'}
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => setTableModalOpen(false)}
+                                ></button>
+                            </div>
+                            <form onSubmit={handleTableSubmit}>
+                                <div className="modal-body">
                                     <div className="mb-3">
                                         <label className="form-label">Table Name</label>
                                         <input
                                             type="text"
+                                            name="name"
                                             className="form-control"
                                             placeholder="Enter table name"
-                                            defaultValue={editingTable?.name || ''}
+                                            value={tableForm.name}
+                                            onChange={handleTableFormChange}
+                                            required
                                         />
                                     </div>
 
                                     <div className="mb-3">
-                                        <label className="form-label">Select group</label>
+                                        <label className="form-label">Table Type</label>
                                         <div className="position-relative">
                                             <button
                                                 type="button"
                                                 className="form-control text-start d-flex justify-content-between align-items-center"
                                                 onClick={() => toggleDropdown('tableType')}
                                             >
-                                                <span>{selectedTableType}</span>
+                                                <span>{tableForm.type}</span>
                                                 <FaAngleDown />
                                             </button>
                                             {tableTypeDropdownOpen && (
@@ -141,7 +593,10 @@ function TabelPlugSetup() {
                                                         <button
                                                             type="button"
                                                             className="w-100 text-start btn btn-light d-flex align-items-center gap-2"
-                                                            onClick={() => selectTableType('Snooker')}
+                                                            onClick={() => {
+                                                                setTableForm(prev => ({ ...prev, type: 'Snooker' }));
+                                                                setTableTypeDropdownOpen(false);
+                                                            }}
                                                         >
                                                             <FaTableTennis className="text-success" />
                                                             <span>Snooker</span>
@@ -149,7 +604,10 @@ function TabelPlugSetup() {
                                                         <button
                                                             type="button"
                                                             className="w-100 text-start btn btn-light d-flex align-items-center gap-2"
-                                                            onClick={() => selectTableType('Pool')}
+                                                            onClick={() => {
+                                                                setTableForm(prev => ({ ...prev, type: 'Pool' }));
+                                                                setTableTypeDropdownOpen(false);
+                                                            }}
                                                         >
                                                             <FaTableTennis className="text-primary" />
                                                             <span>Pool</span>
@@ -157,7 +615,10 @@ function TabelPlugSetup() {
                                                         <button
                                                             type="button"
                                                             className="w-100 text-start btn btn-light d-flex align-items-center gap-2"
-                                                            onClick={() => selectTableType('PlayStation')}
+                                                            onClick={() => {
+                                                                setTableForm(prev => ({ ...prev, type: 'PlayStation' }));
+                                                                setTableTypeDropdownOpen(false);
+                                                            }}
                                                         >
                                                             <FaGamepad className="text-purple" />
                                                             <span>PlayStation</span>
@@ -166,6 +627,18 @@ function TabelPlugSetup() {
                                                 </div>
                                             )}
                                         </div>
+                                    </div>
+
+                                    <div className="mb-3">
+                                        <label className="form-label">Smart Plug ID</label>
+                                        <input
+                                            type="text"
+                                            name="plugId"
+                                            className="form-control"
+                                            placeholder="Enter plug ID (e.g., PLUG_001)"
+                                            value={tableForm.plugId}
+                                            onChange={handleTableFormChange}
+                                        />
                                     </div>
 
                                     <div className="mb-4">
@@ -177,8 +650,8 @@ function TabelPlugSetup() {
                                                     name="status"
                                                     value="active"
                                                     className="form-check-input"
-                                                    checked={tableStatus === 'active'}
-                                                    onChange={() => setTableStatus('active')}
+                                                    checked={tableForm.status === 'active'}
+                                                    onChange={handleTableFormChange}
                                                 />
                                                 <span className="text-dark">Active</span>
                                             </label>
@@ -188,432 +661,34 @@ function TabelPlugSetup() {
                                                     name="status"
                                                     value="inactive"
                                                     className="form-check-input"
-                                                    checked={tableStatus === 'inactive'}
-                                                    onChange={() => setTableStatus('inactive')}
+                                                    checked={tableForm.status === 'inactive'}
+                                                    onChange={handleTableFormChange}
                                                 />
                                                 <span className="text-dark">Inactive</span>
                                             </label>
                                         </div>
                                     </div>
-
-                                    <button type="submit" className="w-100 btn btn-warning text-dark fw-medium">
-                                        {editingTable ? 'Update Table Type' : 'Add Table'}
-                                    </button>
-                                </form>
-
-                                {/* Table List */}
-                                <div className="border rounded overflow-hidden">
-                                    <div className="bg-dark text-white px-3 py-2">
-                                        <h4 className="fw-medium mb-0">Existing Table Types</h4>
-                                    </div>
-                                    <div className="divide-y">
-                                        <div className="px-3 py-2 d-flex justify-content-between align-items-center hover-bg-warning-subtle">
-                                            <div className="d-flex align-items-center gap-3">
-                                                <FaTableTennis className="text-success fs-5" />
-                                                <div>
-                                                    <div className="fw-medium text-dark">Snooker Table 1</div>
-                                                    <div className="text-muted small">Snooker • Active</div>
-                                                </div>
-                                            </div>
-                                            <div className="d-flex gap-2">
-                                                <button
-                                                    className="btn btn-sm btn-outline-warning"
-                                                    onClick={() => editTable('Snooker Table 1', 'Snooker', 'active')}
-                                                >
-                                                    <FaEdit />
-                                                </button>
-                                                <button className="btn btn-sm btn-outline-danger">
-                                                    <FaTrashAlt />
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="px-3 py-2 d-flex justify-content-between align-items-center hover-bg-warning-subtle">
-                                            <div className="d-flex align-items-center gap-3">
-                                                <FaTableTennis className="text-primary fs-5" />
-                                                <div>
-                                                    <div className="fw-medium text-dark">Pool Table A</div>
-                                                    <div className="text-muted small">Pool • Active</div>
-                                                </div>
-                                            </div>
-                                            <div className="d-flex gap-2">
-                                                <button
-                                                    className="btn btn-sm btn-outline-warning"
-                                                    onClick={() => editTable('Pool Table A', 'Pool', 'active')}
-                                                >
-                                                    <FaEdit />
-                                                </button>
-                                                <button className="btn btn-sm btn-outline-danger">
-                                                    <FaTrashAlt />
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div className="px-3 py-2 d-flex justify-content-between align-items-center hover-bg-warning-subtle">
-                                            <div className="d-flex align-items-center gap-3">
-                                                <FaGamepad className="text-purple fs-5" />
-                                                <div>
-                                                    <div className="fw-medium text-dark">PlayStation Zone 1</div>
-                                                    <div className="text-muted small">PlayStation • Active</div>
-                                                </div>
-                                            </div>
-                                            <div className="d-flex gap-2">
-                                                <button
-                                                    className="btn btn-sm btn-outline-warning"
-                                                    onClick={() => editTable('PlayStation Zone 1', 'PlayStation', 'active')}
-                                                >
-                                                    <FaEdit />
-                                                </button>
-                                                <button className="btn btn-sm btn-outline-danger">
-                                                    <FaTrashAlt />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Set Hourly/Fixed Rate Section */}
-                        <div className="col-12 col-xl-6">
-                            <div className="bg-white rounded shadow-sm p-3 p-md-4 h-100">
-                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-                                    <div className="d-flex align-items-center gap-3">
-                                        <div className="bg-warning rounded p-2">
-                                            <FaClock className="text-dark" />
-                                        </div>
-                                        <h5 className=" fw-light text-dark mb-0">Set Hourly/Fixed Rate</h5>
-                                    </div>
+                                <div className="modal-footer">
                                     <button
                                         type="button"
-                                        className="btn btn-warning text-dark d-flex align-items-center gap-2"
-                                        onClick={() => setGroupModalOpen(true)}
+                                        className="btn btn-secondary"
+                                        onClick={() => setTableModalOpen(false)}
                                     >
-                                        <FaPlus />
-                                        <span>Create Group</span>
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        className="btn btn-warning text-dark"
+                                    >
+                                        {editingTable ? 'Update Table' : 'Add Table'}
                                     </button>
                                 </div>
-
-                                <form className="mb-4">
-                                    <div className="mb-3">
-                                        <label className="form-label">Group name</label>
-                                        <div className="position-relative">
-                                            <button
-                                                type="button"
-                                                className="form-control text-start d-flex justify-content-between align-items-center"
-                                                onClick={() => toggleDropdown('rateTable')}
-                                            >
-                                                <span>{selectedRateTable}</span>
-                                                <FaAngleDown />
-                                            </button>
-                                            {rateTableDropdownOpen && (
-                                                <div className="position-absolute top-100 start-0 end-0 bg-white border rounded mt-1 shadow-lg z-3">
-                                                    <div className="py-1">
-                                                        <div className="px-3 py-1 small fw-medium text-muted bg-light">Groups</div>
-                                                        <button
-                                                            type="button"
-                                                            className="w-100 text-start btn btn-light d-flex align-items-center gap-2"
-                                                            onClick={() => selectRateTable('Premium Snooker Group')}
-                                                        >
-                                                            <FaUsers className="text-warning" />
-                                                            <span>Premium Snooker Group</span>
-                                                            <span className="text-muted small ms-2">(3 tables)</span>
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="w-100 text-start btn btn-light d-flex align-items-center gap-2"
-                                                            onClick={() => selectRateTable('Standard Pool Group')}
-                                                        >
-                                                            <FaUsers className="text-warning" />
-                                                            <span>Standard Pool Group</span>
-                                                            <span className="text-muted small ms-2">(2 tables)</span>
-                                                        </button>
-                                                        <div className="px-3 py-1 small fw-medium text-muted bg-light">Individual Tables</div>
-                                                        <button
-                                                            type="button"
-                                                            className="w-100 text-start btn btn-light"
-                                                            onClick={() => selectRateTable('Snooker Table 1')}
-                                                        >
-                                                            Snooker Table 1
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="w-100 text-start btn btn-light"
-                                                            onClick={() => selectRateTable('Pool Table A')}
-                                                        >
-                                                            Pool Table A
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="w-100 text-start btn btn-light"
-                                                            onClick={() => selectRateTable('PlayStation Zone 1')}
-                                                        >
-                                                            PlayStation Zone 1
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="row g-3 mb-3">
-                                        <div className="col-12 col-md-6">
-                                            <label className="form-label">Hourly Rate ($)</label>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                placeholder="0.00"
-                                                defaultValue="15.00"
-                                            />
-                                        </div>
-                                        <div className="col-12 col-md-6">
-                                            <label className="form-label">Fixed Rate ($)</label>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                placeholder="0.00"
-                                                defaultValue="50.00"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-4">
-                                        <label className="form-label">Discounted Rate (%) <span className="text-muted">Optional</span></label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="0"
-                                            defaultValue="10"
-                                        />
-                                    </div>
-
-                                    <button type="submit" className="w-100 btn btn-warning text-dark fw-medium">
-                                        Save Changes
-                                    </button>
-                                </form>
-
-                                {/* Rate Preview */}
-                                <div className="bg-dark text-white rounded p-3">
-                                    <h4 className="fw-medium mb-3">Rate Preview</h4>
-                                    <div className="small">
-                                        <div className="d-flex justify-content-between mb-2">
-                                            <span>Hourly Rate:</span>
-                                            <span>$15.00/hour</span>
-                                        </div>
-                                        <div className="d-flex justify-content-between mb-2">
-                                            <span>Fixed Rate:</span>
-                                            <span>$50.00/session</span>
-                                        </div>
-                                        <div className="d-flex justify-content-between">
-                                            <span>With 10% Discount:</span>
-                                            <span>$13.50/hour</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Smart Plug Mapping Section */}
-                        <div className="col-12">
-                            <div className="bg-white rounded shadow-sm p-3 p-md-4">
-                                <div className="d-flex align-items-center gap-3 mb-4">
-                                    <div className="bg-warning rounded p-2">
-                                        <FaPlug className="text-dark" />
-                                    </div>
-                                    <h5 className=" fw-light text-dark mb-0">Map Smart Plug (ON/OFF Control)</h5>
-                                </div>
-
-                                <div className="row g-4">
-                                    {/* Plug Assignment Form */}
-                                    <div className="col-12 col-lg-6">
-                                        <h4 className="fw-medium text-dark mb-3">Assign Smart Plug</h4>
-                                        <form>
-                                            <div className="mb-3">
-                                                <label className="form-label">Select Table</label>
-                                                <div className="position-relative">
-                                                    <button
-                                                        type="button"
-                                                        className="form-control text-start d-flex justify-content-between align-items-center"
-                                                        onClick={() => toggleDropdown('plugTable')}
-                                                    >
-                                                        <span>{selectedPlugTable}</span>
-                                                        <FaAngleDown />
-                                                    </button>
-                                                    {plugTableDropdownOpen && (
-                                                        <div className="position-absolute top-100 start-0 end-0 bg-white border rounded mt-1 shadow-lg z-3">
-                                                            <div className="py-1">
-                                                                <button
-                                                                    type="button"
-                                                                    className="w-100 text-start btn btn-light"
-                                                                    onClick={() => selectPlugTable('Snooker Table 1')}
-                                                                >
-                                                                    Snooker Table 1
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    className="w-100 text-start btn btn-light"
-                                                                    onClick={() => selectPlugTable('Pool Table A')}
-                                                                >
-                                                                    Pool Table A
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    className="w-100 text-start btn btn-light"
-                                                                    onClick={() => selectPlugTable('PlayStation Zone 1')}
-                                                                >
-                                                                    PlayStation Zone 1
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="mb-4">
-                                                <label className="form-label">Smart Plug ID</label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="Enter plug ID (e.g., PLUG_001)"
-                                                />
-                                            </div>
-
-                                            <button type="submit" className="w-100 btn btn-warning text-dark fw-medium">
-                                                Map Smart Plug
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    {/* Plug Control Panel */}
-                                    <div className="col-12 col-lg-6">
-                                        <h4 className="fw-medium text-dark mb-3">Smart Plug Control</h4>
-                                        <div className="d-flex flex-column gap-3">
-                                            {/* Plug Control Item */}
-                                            <div className="border rounded p-3">
-                                                <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
-                                                    <div className="d-flex align-items-center gap-3">
-                                                        <FaTableTennis className="text-success fs-5" />
-                                                        <div>
-                                                            <div className="fw-medium text-dark">Snooker Table 1</div>
-                                                            <div className="text-muted small">Plug ID: PLUG_001</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="d-flex align-items-center gap-2">
-                                                        <div className={`rounded-circle ${plugStatus.PLUG_001 === 'online' ? 'bg-success' : 'bg-danger'}`} style={{ width: '12px', height: '12px' }}></div>
-                                                        <span className={`small fw-medium ${plugStatus.PLUG_001 === 'online' ? 'text-success' : 'text-danger'}`}>
-                                                            {plugStatus.PLUG_001 === 'online' ? 'ONLINE' : 'OFFLINE'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="d-flex gap-3">
-                                                    <button
-                                                        className={`btn flex-grow-1 ${plugStatus.PLUG_001 === 'online' ? 'btn-success' : 'btn-secondary'}`}
-                                                        onClick={() => togglePlug('PLUG_001', 'on')}
-                                                        disabled={plugStatus.PLUG_001 === 'online'}
-                                                    >
-                                                        <div className="d-flex align-items-center justify-content-center gap-2">
-                                                            <FaPlay />
-                                                            <span>Turn ON</span>
-                                                        </div>
-                                                    </button>
-                                                    <button
-                                                        className={`btn flex-grow-1 ${plugStatus.PLUG_001 === 'offline' ? 'btn-danger' : 'btn-secondary'}`}
-                                                        onClick={() => togglePlug('PLUG_001', 'off')}
-                                                        disabled={plugStatus.PLUG_001 === 'offline'}
-                                                    >
-                                                        <div className="d-flex align-items-center justify-content-center gap-2">
-                                                            <FaStop />
-                                                            <span>Turn OFF</span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <div className="border rounded p-3">
-                                                <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
-                                                    <div className="d-flex align-items-center gap-3">
-                                                        <FaTableTennis className="text-primary fs-5" />
-                                                        <div>
-                                                            <div className="fw-medium text-dark">Pool Table A</div>
-                                                            <div className="text-muted small">Plug ID: PLUG_002</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="d-flex align-items-center gap-2">
-                                                        <div className={`rounded-circle ${plugStatus.PLUG_002 === 'online' ? 'bg-success' : 'bg-danger'}`} style={{ width: '12px', height: '12px' }}></div>
-                                                        <span className={`small fw-medium ${plugStatus.PLUG_002 === 'online' ? 'text-success' : 'text-danger'}`}>
-                                                            {plugStatus.PLUG_002 === 'online' ? 'ONLINE' : 'OFFLINE'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="d-flex gap-3">
-                                                    <button
-                                                        className={`btn flex-grow-1 ${plugStatus.PLUG_002 === 'online' ? 'btn-success' : 'btn-secondary'}`}
-                                                        onClick={() => togglePlug('PLUG_002', 'on')}
-                                                        disabled={plugStatus.PLUG_002 === 'online'}
-                                                    >
-                                                        <div className="d-flex align-items-center justify-content-center gap-2">
-                                                            <FaPlay />
-                                                            <span>Turn ON</span>
-                                                        </div>
-                                                    </button>
-                                                    <button
-                                                        className={`btn flex-grow-1 ${plugStatus.PLUG_002 === 'offline' ? 'btn-danger' : 'btn-secondary'}`}
-                                                        onClick={() => togglePlug('PLUG_002', 'off')}
-                                                        disabled={plugStatus.PLUG_002 === 'offline'}
-                                                    >
-                                                        <div className="d-flex align-items-center justify-content-center gap-2">
-                                                            <FaStop />
-                                                            <span>Turn OFF</span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <div className="border rounded p-3">
-                                                <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
-                                                    <div className="d-flex align-items-center gap-3">
-                                                        <FaGamepad className="text-purple fs-5" />
-                                                        <div>
-                                                            <div className="fw-medium text-dark">PlayStation Zone 1</div>
-                                                            <div className="text-muted small">Plug ID: PLUG_003</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="d-flex align-items-center gap-2">
-                                                        <div className={`rounded-circle ${plugStatus.PLUG_003 === 'online' ? 'bg-success' : 'bg-danger'}`} style={{ width: '12px', height: '12px' }}></div>
-                                                        <span className={`small fw-medium ${plugStatus.PLUG_003 === 'online' ? 'text-success' : 'text-danger'}`}>
-                                                            {plugStatus.PLUG_003 === 'online' ? 'ONLINE' : 'OFFLINE'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="d-flex gap-3">
-                                                    <button
-                                                        className={`btn flex-grow-1 ${plugStatus.PLUG_003 === 'online' ? 'btn-success' : 'btn-secondary'}`}
-                                                        onClick={() => togglePlug('PLUG_003', 'on')}
-                                                        disabled={plugStatus.PLUG_003 === 'online'}
-                                                    >
-                                                        <div className="d-flex align-items-center justify-content-center gap-2">
-                                                            <FaPlay />
-                                                            <span>Turn ON</span>
-                                                        </div>
-                                                    </button>
-                                                    <button
-                                                        className={`btn flex-grow-1 ${plugStatus.PLUG_003 === 'offline' ? 'btn-danger' : 'btn-secondary'}`}
-                                                        onClick={() => togglePlug('PLUG_003', 'off')}
-                                                        disabled={plugStatus.PLUG_003 === 'offline'}
-                                                    >
-                                                        <div className="d-flex align-items-center justify-content-center gap-2">
-                                                            <FaStop />
-                                                            <span>Turn OFF</span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Group Management Modal */}
             {groupModalOpen && (
@@ -621,7 +696,9 @@ function TabelPlugSetup() {
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Create Table Group</h5>
+                                <h5 className="modal-title">
+                                    {editingGroup ? 'Edit Group' : 'Create Group'}
+                                </h5>
                                 <button
                                     type="button"
                                     className="btn-close"
@@ -632,73 +709,79 @@ function TabelPlugSetup() {
                                 <div className="modal-body">
                                     <div className="mb-3">
                                         <label className="form-label">Group Name</label>
-                                        <input type="text" className="form-control" placeholder="Enter group name" />
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            className="form-control"
+                                            placeholder="Enter group name"
+                                            value={groupForm.name}
+                                            onChange={handleGroupFormChange}
+                                            required
+                                        />
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Select Tables</label>
                                         <div className="border rounded overflow-auto" style={{ maxHeight: '200px' }}>
                                             <div className="p-2 d-flex flex-column gap-2">
-                                                <div className="form-check">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="form-check-input"
-                                                        id="snooker1"
-                                                        value="snooker1"
-                                                    />
-                                                    <label className="form-check-label" htmlFor="snooker1">Snooker Table 1</label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="form-check-input"
-                                                        id="snooker2"
-                                                        value="snooker2"
-                                                    />
-                                                    <label className="form-check-label" htmlFor="snooker2">Snooker Table 2</label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="form-check-input"
-                                                        id="pool1"
-                                                        value="pool1"
-                                                    />
-                                                    <label className="form-check-label" htmlFor="pool1">Pool Table A</label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="form-check-input"
-                                                        id="pool2"
-                                                        value="pool2"
-                                                    />
-                                                    <label className="form-check-label" htmlFor="pool2">Pool Table B</label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="form-check-input"
-                                                        id="ps1"
-                                                        value="ps1"
-                                                    />
-                                                    <label className="form-check-label" htmlFor="ps1">PlayStation Zone 1</label>
-                                                </div>
+                                                {tables.map(table => (
+                                                    <div key={table.id} className="form-check">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="form-check-input"
+                                                            id={`table-${table.id}`}
+                                                            checked={groupForm.selectedTables.includes(table.id)}
+                                                            onChange={() => handleTableSelection(table.id)}
+                                                        />
+                                                        <label className="form-check-label" htmlFor={`table-${table.id}`}>
+                                                            {table.name} ({table.type})
+                                                        </label>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="row g-3 mb-3">
                                         <div className="col-md-6">
                                             <label className="form-label">Hourly Rate ($)</label>
-                                            <input type="number" className="form-control" placeholder="0.00" />
+                                            <input
+                                                type="number"
+                                                name="hourlyRate"
+                                                className="form-control"
+                                                placeholder="0.00"
+                                                value={groupForm.hourlyRate}
+                                                onChange={handleGroupFormChange}
+                                                min="0"
+                                                step="0.01"
+                                                required
+                                            />
                                         </div>
                                         <div className="col-md-6">
                                             <label className="form-label">Fixed Rate ($)</label>
-                                            <input type="number" className="form-control" placeholder="0.00" />
+                                            <input
+                                                type="number"
+                                                name="fixedRate"
+                                                className="form-control"
+                                                placeholder="0.00"
+                                                value={groupForm.fixedRate}
+                                                onChange={handleGroupFormChange}
+                                                min="0"
+                                                step="0.01"
+                                                required
+                                            />
                                         </div>
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Discounted Rate (%) <span className="text-muted">Optional</span></label>
-                                        <input type="number" className="form-control" placeholder="0" />
+                                        <input
+                                            type="number"
+                                            name="discount"
+                                            className="form-control"
+                                            placeholder="0"
+                                            value={groupForm.discount}
+                                            onChange={handleGroupFormChange}
+                                            min="0"
+                                            max="100"
+                                        />
                                     </div>
                                 </div>
                                 <div className="modal-footer">
@@ -709,8 +792,12 @@ function TabelPlugSetup() {
                                     >
                                         Cancel
                                     </button>
-                                    <button type="submit" className="btn btn-warning text-dark">
-                                        Create Group
+                                    <button
+                                        type="submit"
+                                        className="btn btn-warning text-dark"
+                                        disabled={groupForm.selectedTables.length === 0}
+                                    >
+                                        {editingGroup ? 'Update Group' : 'Create Group'}
                                     </button>
                                 </div>
                             </form>
@@ -722,4 +809,4 @@ function TabelPlugSetup() {
     );
 }
 
-export default TabelPlugSetup;
+export default TablePlugSetup;
