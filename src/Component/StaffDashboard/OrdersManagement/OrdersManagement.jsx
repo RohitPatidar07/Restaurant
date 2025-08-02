@@ -1,751 +1,914 @@
 import React, { useState, useEffect } from 'react';
-import { RiDashboardLine, RiRestaurantLine, RiTableLine, RiGamepadLine, RiPrinterLine, RiBarChartLine, RiSettingsLine, RiRefreshLine, RiAddLine, RiSubtractLine, RiCloseLine, RiCupLine, RiSearchLine, RiShoppingCartLine, RiFilterLine, RiCheckLine } from 'react-icons/ri';
-import { Dropdown } from 'react-bootstrap';
+import './OrderManagement.css';
+import TableManagement from './TableManagement';
 
 const OrdersManagement = () => {
-  // State for category tabs
-  const [activeCategory, setActiveCategory] = useState('food');
-  const [expandedCategory, setExpandedCategory] = useState(null);
-
-
-  // State for cart
-  const [cart, setCart] = useState(new Map());
+  // State management
+  const [activeTab, setActiveTab] = useState('register');
+  const [activeFloor, setActiveFloor] = useState('main');
+  const [selectedCategory, setSelectedCategory] = useState('food');
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    phone: '',
+    specialRequests: ''
+  });
+  const [orderNote, setOrderNote] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [orderType, setOrderType] = useState('dineIn');
   const [selectedTable, setSelectedTable] = useState(null);
-  const [customerName, setCustomerName] = useState('');
+  const [orderItems, setOrderItems] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedSides, setSelectedSides] = useState([]);
+  const [isSidesModalOpen, setIsSidesModalOpen] = useState(false);
 
-  // State for modal
-  const [showModal, setShowModal] = useState(false);
-  const [serviceType, setServiceType] = useState('dine-in');
-  const [orderType, setOrderType] = useState('food');
-  const [selectedLocation, setSelectedLocation] = useState('restaurant');
-  const [tableNumber, setTableNumber] = useState('');
-  const [specialInstructions, setSpecialInstructions] = useState('');
+  // Data
+  const categories = [
+    { id: 'food', name: 'Food', icon: 'fa fa-cutlery' },
+    { id: 'drinks', name: 'Drinks', icon: 'fa fa-coffee' },
+    { id: 'games', name: 'Games', icon: 'fa fa-gamepad' }
+  ];
 
-  // State for mobile view
-  const [showCart, setShowCart] = useState(false);
+  const products = {
+    food: [
+      {
+        id: 1,
+        name: 'Classic Bacon Burger',
+        price: 12.99,
+        image: 'https://readdy.ai/api/search-image?query=delicious%20bacon%20cheeseburger%20with%20melted%20cheese%20crispy%20bacon%20lettuce%20tomato%20on%20artisanal%20bun%20clean%20white%20background%20professional%20food%20photography%20high%20quality&width=200&height=200&seq=burger001&orientation=squarish',
+        sides: [
+          { id: 's1', name: 'Belgian Fresh Fries', price: 3.99 },
+          { id: 's2', name: 'Sweet Potato Fries', price: 4.99 },
+          { id: 's3', name: 'Grilled Vegetables', price: 4.99 },
+          { id: 's4', name: 'Onion Rings', price: 4.49 }
+        ]
+      },
+      {
+        id: 2,
+        name: 'Gourmet Pizza',
+        price: 15.99,
+        image: 'https://readdy.ai/api/search-image?query=artisanal%20pizza%20with%20fresh%20mozzarella%20basil%20cherry%20tomatoes%20and%20olive%20oil%20on%20wooden%20board%20clean%20white%20background%20professional%20food%20photography%20high%20quality&width=200&height=200&seq=pizza001&orientation=squarish',
+        sides: [
+          { id: 's5', name: 'Garden Salad', price: 4.99 },
+          { id: 's6', name: 'Garlic Bread', price: 3.99 },
+          { id: 's7', name: 'Caesar Side Salad', price: 5.99 }
+        ]
+      },
+      {
+        id: 3,
+        name: 'Grilled Chicken',
+        price: 16.99,
+        image: 'https://readdy.ai/api/search-image?query=perfectly%20grilled%20chicken%20breast%20with%20herbs%20and%20spices%20on%20white%20plate%20garnished%20with%20fresh%20herbs%20clean%20white%20background%20professional%20food%20photography%20high%20quality&width=200&height=200&seq=chicken001&orientation=squarish',
+        sides: [
+          { id: 's8', name: 'Mashed Potatoes', price: 4.99 },
+          { id: 's9', name: 'Steamed Broccoli', price: 3.99 },
+          { id: 's10', name: 'Rice Pilaf', price: 3.99 }
+        ]
+      },
+      {
+        id: 4,
+        name: 'Pasta Carbonara',
+        price: 14.99,
+        image: 'https://readdy.ai/api/search-image?query=creamy%20pasta%20carbonara%20with%20pancetta%20parmesan%20cheese%20and%20black%20pepper%20in%20elegant%20white%20bowl%20clean%20white%20background%20professional%20food%20photography%20high%20quality&width=200&height=200&seq=pasta001&orientation=squarish',
+        sides: [
+          { id: 's11', name: 'Garlic Bread', price: 3.99 },
+          { id: 's12', name: 'Side Salad', price: 4.99 },
+          { id: 's13', name: 'Soup of the Day', price: 4.99 }
+        ]
+      }
+    ],
+    drinks: [
+      { id: 7, name: 'Coca Cola', price: 2.99, image: 'https://readdy.ai/api/search-image?query=refreshing%20cola%20drink%20in%20tall%20glass%20with%20ice%20and%20straw%20clean%20white%20background%20professional%20beverage%20photography%20high%20quality&width=200&height=200&seq=cola001&orientation=squarish' },
+      { id: 8, name: 'Fresh Orange Juice', price: 4.99, image: 'https://readdy.ai/api/search-image?query=fresh%20orange%20juice%20in%20clear%20glass%20with%20orange%20slices%20clean%20white%20background%20professional%20beverage%20photography%20high%20quality%20natural%20drink&width=200&height=200&seq=orange001&orientation=squarish' },
+      { id: 9, name: 'Iced Coffee', price: 3.99, image: 'https://readdy.ai/api/search-image?query=iced%20coffee%20with%20cream%20in%20tall%20glass%20with%20ice%20cubes%20clean%20white%20background%20professional%20beverage%20photography%20high%20quality%20cafe%20style&width=200&height=200&seq=coffee001&orientation=squarish' },
+      { id: 10, name: 'Lemonade', price: 3.49, image: 'https://readdy.ai/api/search-image?query=fresh%20lemonade%20with%20lemon%20slices%20and%20mint%20in%20glass%20pitcher%20clean%20white%20background%20professional%20beverage%20photography%20high%20quality%20summer%20drink&width=200&height=200&seq=lemon001&orientation=squarish' }
+    ],
+    games: [
+      { id: 11, name: 'Pool Table - 1 Hour', price: 25.99, image: 'https://readdy.ai/api/search-image?query=professional%20pool%20billiard%20table%20with%20green%20felt%20balls%20and%20cues%20in%20modern%20gaming%20room%20with%20clean%20white%20background%20high%20quality%20entertainment%20photography&width=200&height=200&seq=pool001&orientation=squarish' },
+      { id: 12, name: 'Ping Pong - 1 Hour', price: 15.99, image: 'https://readdy.ai/api/search-image?query=modern%20ping%20pong%20table%20with%20paddles%20and%20balls%20in%20gaming%20area%20with%20clean%20white%20background%20professional%20sports%20equipment%20photography%20high%20quality&width=200&height=200&seq=pingpong001&orientation=squarish' },
+      { id: 13, name: 'Foosball - 1 Hour', price: 12.99, image: 'https://readdy.ai/api/search-image?query=professional%20foosball%20table%20with%20players%20and%20balls%20in%20modern%20game%20room%20with%20clean%20white%20background%20high%20quality%20entertainment%20photography&width=200&height=200&seq=foosball001&orientation=squarish' },
+      { id: 14, name: 'Darts - 1 Hour', price: 8.99, image: 'https://readdy.ai/api/search-image?query=professional%20dartboard%20with%20darts%20mounted%20on%20wall%20in%20modern%20game%20room%20with%20clean%20white%20background%20high%20quality%20entertainment%20photography&width=200&height=200&seq=darts001&orientation=squarish' }
+    ]
+  };
 
-  // State for table filtering
-  const [tableFilter, setTableFilter] = useState('all');
-  const [showTableFilter, setShowTableFilter] = useState(false);
+  const mainFloorTables = [
+    { id: 1, status: 'occupied', guests: 4, order: 'Order #1234' },
+    { id: 2, status: 'available', guests: 0, order: null },
+    { id: 3, status: 'occupied', guests: 2, order: 'Order #1235' },
+    { id: 4, status: 'available', guests: 0, order: null },
+    { id: 5, status: 'reserved', guests: 6, order: null },
+    { id: 6, status: 'occupied', guests: 3, order: 'Order #1236' },
+    { id: 7, status: 'available', guests: 0, order: null },
+    { id: 8, status: 'available', guests: 0, order: null },
+    { id: 9, status: 'occupied', guests: 2, order: 'Order #1237' },
+    { id: 10, status: 'available', guests: 0, order: null },
+    { id: 11, status: 'available', guests: 0, order: null },
+    { id: 12, status: 'occupied', guests: 5, order: 'Order #1238' }
+  ];
 
+  const patioTables = [
+    { id: 101, status: 'available', guests: 0, order: null },
+    { id: 102, status: 'occupied', guests: 2, order: 'Order #P101' },
+    { id: 103, status: 'available', guests: 0, order: null },
+    { id: 104, status: 'reserved', guests: 4, order: null },
+    { id: 105, status: 'occupied', guests: 3, order: 'Order #P102' },
+    { id: 106, status: 'available', guests: 0, order: null },
+    { id: 107, status: 'occupied', guests: 2, order: 'Order #P103' },
+    { id: 108, status: 'available', guests: 0, order: null }
+  ];
 
-  // State for mobile view
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [tables, setTables] = useState(mainFloorTables);
 
+  // Helper functions
+  const getTableStatusColor = (status) => {
+    switch (status) {
+      case 'occupied': return 'bg-success';
+      case 'available': return 'bg-secondary';
+      case 'reserved': return 'bg-warning';
+      default: return 'bg-secondary';
+    }
+  };
 
+  const calculateSubtotal = () => {
+    return orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  const calculateTax = () => {
+    return calculateSubtotal() * 0.08;
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + calculateTax();
+  };
+
+  const addToOrder = (product) => {
+    if (product.sides && product.sides.length > 0) {
+      setSelectedProduct(product);
+      setSelectedSides([]);
+      setIsSidesModalOpen(true);
+    } else {
+      const existingItem = orderItems.find(item => item.id === product.id);
+      if (existingItem) {
+        setOrderItems(orderItems.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        ));
+      } else {
+        setOrderItems([...orderItems, { ...product, quantity: 1 }]);
+      }
+    }
+  };
+
+  const handleSideToggle = (side) => {
+    setSelectedSides(prevSides => {
+      const sideExists = prevSides.find(s => s.id === side.id);
+      if (sideExists) {
+        return prevSides.filter(s => s.id !== side.id);
+      } else {
+        return [...prevSides, side];
+      }
+    });
+  };
+
+  const handleAddWithSides = () => {
+    const existingItem = orderItems.find(item =>
+      item.id === selectedProduct.id &&
+      JSON.stringify(item.sides) === JSON.stringify(selectedSides)
+    );
+    if (existingItem) {
+      setOrderItems(orderItems.map(item =>
+        item.id === selectedProduct.id && JSON.stringify(item.sides) === JSON.stringify(selectedSides)
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+    } else {
+      setOrderItems([...orderItems, {
+        ...selectedProduct,
+        quantity: 1,
+        sides: selectedSides,
+        price: selectedProduct.price + selectedSides.reduce((sum, side) => sum + side.price, 0)
+      }]);
+    }
+    setIsSidesModalOpen(false);
+    setSelectedProduct(null);
+    setSelectedSides([]);
+  };
+
+  const filteredProducts = products[selectedCategory].filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Add table highlight effect when component mounts
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+    const styles = document.createElement('style');
+    styles.innerHTML = `
+      .table-highlight {
+        outline: 3px solid #3B82F6 !important;
+        outline-offset: 4px;
+        transition: outline-color 0.3s ease;
+      }
+      @keyframes pulse {
+        0% { outline-color: #3B82F6; }
+        50% { outline-color: #60A5FA; }
+        100% { outline-color: #3B82F6; }
+      }
+      .animate-pulse {
+        animation: pulse 1s infinite;
+      }
+    `;
+    document.head.appendChild(styles);
+
+    // Add click outside listener for course dropdown
+    const handleClickOutside = (event) => {
+      const dropdown = document.getElementById('courseDropdown');
+      const button = document.getElementById('courseButton');
+      if (dropdown && button && !button.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.add('d-none');
+      }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
   }, []);
 
+  const [isActionsModalOpen, setIsActionsModalOpen] = useState(false);
+  const [quickJumpInput, setQuickJumpInput] = useState('');
 
-  const [sendOrder, setSendOrder] = useState();
-
-  // Generate more tables for demonstration
-  const generateTables = () => {
-    const baseTables = [
-      { id: 'pool-1', name: 'Pool Table 1', status: 'available', details: 'Last cleaned: 10:30 AM', color: 'primary', type: 'game' },
-      { id: 'pool-2', name: 'Pool Table 2', status: 'occupied', details: 'Started: 2:15 PM', color: 'warning', type: 'game' },
-      { id: 'snooker-1', name: 'Snooker 1', status: 'available', details: 'Last cleaned: 11:45 AM', color: 'secondary', type: 'game' },
-      { id: 'ps-1', name: 'PlayStation 1', status: 'reserved', details: 'Reserved for 3:00 PM', color: 'danger', type: 'game' },
-      { id: 'ps-2', name: 'PlayStation 2', status: 'occupied', details: 'Started: 1:30 PM', color: 'warning', type: 'game' },
-      { id: 'restaurant-1', name: 'Restaurant T1', status: 'available', details: 'Seats: 4', color: 'secondary', type: 'dining' },
-      { id: 'restaurant-2', name: 'Restaurant T2', status: 'available', details: 'Seats: 2', color: 'secondary', type: 'dining' },
-      { id: 'restaurant-3', name: 'Restaurant T3', status: 'occupied', details: 'Started: 1:45 PM', color: 'warning', type: 'dining' },
-      { id: 'restaurant-4', name: 'Restaurant T4', status: 'available', details: 'Seats: 6', color: 'secondary', type: 'dining' },
-      { id: 'restaurant-5', name: 'Restaurant T5', status: 'reserved', details: 'Reserved for 3:30 PM', color: 'danger', type: 'dining' },
-      { id: 'restaurant-6', name: 'Restaurant T6', status: 'available', details: 'Seats: 4', color: 'secondary', type: 'dining' },
-      { id: 'restaurant-7', name: 'Restaurant T7', status: 'available', details: 'Seats: 8', color: 'secondary', type: 'dining' },
-      { id: 'restaurant-8', name: 'Restaurant T8', status: 'occupied', details: 'Started: 2:00 PM', color: 'warning', type: 'dining' },
-      { id: 'pool-3', name: 'Pool Table 3', status: 'available', details: 'Last cleaned: 12:30 PM', color: 'primary', type: 'game' },
-      { id: 'pool-4', name: 'Pool Table 4', status: 'available', details: 'Last cleaned: 1:00 PM', color: 'primary', type: 'game' },
-      { id: 'snooker-2', name: 'Snooker 2', status: 'occupied', details: 'Started: 12:45 PM', color: 'warning', type: 'game' },
-      { id: 'ps-3', name: 'PlayStation 3', status: 'available', details: 'Ready to use', color: 'secondary', type: 'game' },
-      { id: 'ps-4', name: 'PlayStation 4', status: 'reserved', details: 'Reserved for 4:00 PM', color: 'danger', type: 'game' },
-      { id: 'ps-5', name: 'PlayStation 5', status: 'available', details: 'Ready to use', color: 'secondary', type: 'game' },
-      { id: 'ps-6', name: 'PlayStation 6', status: 'occupied', details: 'Started: 1:15 PM', color: 'warning', type: 'game' }
-    ];
-
-    return baseTables;
-  };
-
-  const tables = generateTables();
-
-  // Filter tables based on selected filter
-  const filteredTables = tables.filter(table => {
-    if (tableFilter === 'all') return true;
-    if (tableFilter === 'available') return table.status === 'available';
-    if (tableFilter === 'occupied') return table.status === 'occupied';
-    if (tableFilter === 'reserved') return table.status === 'reserved';
-    if (tableFilter === 'dining') return table.type === 'dining';
-    if (tableFilter === 'game') return table.type === 'game';
-    return true;
-  });
-
-  // Menu items data organized by categories and subcategories
-  const menuCategories = {
-    food: {
-      name: "Food",
-      subcategories: {
-        pizza: {
-          name: "Pizza",
-          items: [
-            { id: 1, name: 'Margherita Pizza', description: 'Fresh basil and mozzarella', price: 18.50, image: 'https://readdy.ai/api/search-image?query=margherita%20pizza%20with%20fresh%20basil%20and%20mozzarella%20cheese%20on%20white%20background%2C%20professional%20food%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=pizza1&orientation=squarish' },
-            { id: 2, name: 'Pepperoni Pizza', description: 'Classic pepperoni with cheese', price: 19.99, image: 'https://readdy.ai/api/search-image?query=pepperoni%20pizza%20on%20white%20background&width=200&height=200&seq=pizza2&orientation=squarish' }
-          ]
-        },
-        burgers: {
-          name: "Burgers",
-          items: [
-            { id: 3, name: 'Chicken Burger', description: 'Crispy chicken with fresh lettuce', price: 12.99, image: 'https://readdy.ai/api/search-image?query=delicious%20crispy%20chicken%20burger%20with%20lettuce%20tomato%20and%20cheese%20on%20white%20background%2C%20professional%20food%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=burger1&orientation=squarish' },
-            { id: 4, name: 'Cheeseburger', description: 'Classic beef with cheese', price: 11.50, image: 'https://readdy.ai/api/search-image?query=cheeseburger%20on%20white%20background&width=200&height=200&seq=burger2&orientation=squarish' }
-          ]
-        },
-        main: {
-          name: "Main Courses",
-          items: [
-            { id: 5, name: 'Grilled Salmon', description: 'Fresh salmon with vegetables', price: 24.99, image: 'https://readdy.ai/api/search-image?query=grilled%20salmon%20steak%20with%20vegetables%20and%20lemon%20on%20white%20background%2C%20professional%20food%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=salmon1&orientation=squarish' },
-            { id: 6, name: 'Steak', description: 'Grilled ribeye with mashed potatoes', price: 28.50, image: 'https://readdy.ai/api/search-image?query=grilled%20steak%20on%20white%20background&width=200&height=200&seq=steak1&orientation=squarish' }
-          ]
-        },
-        salads: {
-          name: "Salads",
-          items: [
-            { id: 7, name: 'Caesar Salad', description: 'Crisp romaine with parmesan', price: 9.99, image: 'https://readdy.ai/api/search-image?query=caesar%20salad%20with%20croutons%20parmesan%20cheese%20and%20dressing%20on%20white%20background%2C%20professional%20food%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=salad1&orientation=squarish' },
-            { id: 8, name: 'Greek Salad', description: 'Fresh vegetables with feta', price: 10.50, image: 'https://readdy.ai/api/search-image?query=greek%20salad%20on%20white%20background&width=200&height=200&seq=salad2&orientation=squarish' }
-          ]
-        }
-      }
-    },
-    drinks: {
-      name: "Drinks",
-      subcategories: {
-        hot: {
-          name: "Hot Drinks",
-          items: [
-            { id: 9, name: 'Coffee', description: 'Premium blend coffee', price: 3.50, image: 'https://readdy.ai/api/search-image?query=coffee%20cup%20on%20white%20background&width=200&height=200&seq=coffee1&orientation=squarish' },
-            { id: 10, name: 'Tea', description: 'Selection of teas', price: 2.99, image: 'https://readdy.ai/api/search-image?query=tea%20cup%20on%20white%20background&width=200&height=200&seq=tea1&orientation=squarish' }
-          ]
-        },
-        cold: {
-          name: "Cold Drinks",
-          items: [
-            { id: 11, name: 'Fresh Orange Juice', description: '100% fresh squeezed', price: 4.99, image: 'https://readdy.ai/api/search-image?query=fresh%20orange%20juice%20in%20glass%20with%20orange%20slices%20on%20white%20background%2C%20professional%20beverage%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=juice1&orientation=squarish' },
-            { id: 12, name: 'Iced Coffee', description: 'Premium blend with milk foam', price: 3.50, image: 'https://readdy.ai/api/search-image?query=iced%20coffee%20with%20milk%20foam%20in%20tall%20glass%20on%20white%20background%2C%20professional%20beverage%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=coffee1&orientation=squarish' }
-          ]
-        },
-        alcoholic: {
-          name: "Alcoholic Beverages",
-          items: [
-            { id: 13, name: 'Beer', description: 'Local craft beer', price: 5.99, image: 'https://readdy.ai/api/search-image?query=beer%20glass%20on%20white%20background&width=200&height=200&seq=beer1&orientation=squarish' },
-            { id: 14, name: 'Wine', description: 'House red or white', price: 7.50, image: 'https://readdy.ai/api/search-image?query=wine%20glass%20on%20white%20background&width=200&height=200&seq=wine1&orientation=squarish' }
-          ]
-        }
-      }
-    },
-    games: {
-      name: "Games",
-      subcategories: {
-        pool: {
-          name: "Pool Tables",
-          items: [
-            { id: 15, name: 'Pool Table', description: 'Per hour gaming session', price: 15.00, image: 'https://readdy.ai/api/search-image?query=pool%20table%20with%20colorful%20billiard%20balls%20and%20cues%20in%20game%20center%20on%20white%20background%2C%20professional%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=pool1&orientation=squarish' },
-            { id: 16, name: 'Snooker Table', description: 'Professional snooker table', price: 18.00, image: 'https://readdy.ai/api/search-image?query=snooker%20table%20on%20white%20background&width=200&height=200&seq=snooker1&orientation=squarish' }
-          ]
-        },
-        video: {
-          name: "Video Games",
-          items: [
-            { id: 17, name: 'PlayStation 5', description: 'Latest games available', price: 20.00, image: 'https://readdy.ai/api/search-image?query=playstation%20gaming%20console%20with%20controllers%20and%20games%20in%20entertainment%20center%20on%20white%20background%2C%20professional%20photography%2C%20clean%20minimal%20background&width=200&height=200&seq=ps1&orientation=squarish' },
-            { id: 18, name: 'Xbox Series X', description: 'Latest Xbox console', price: 20.00, image: 'https://readdy.ai/api/search-image?query=xbox%20console%20on%20white%20background&width=200&height=200&seq=xbox1&orientation=squarish' }
-          ]
-        },
-        board: {
-          name: "Board Games",
-          items: [
-            { id: 19, name: 'Chess', description: 'Classic chess set', price: 5.00, image: 'https://readdy.ai/api/search-image?query=chess%20board%20on%20white%20background&width=200&height=200&seq=chess1&orientation=squarish' },
-            { id: 20, name: 'Monopoly', description: 'Classic board game', price: 7.00, image: 'https://readdy.ai/api/search-image?query=monopoly%20board%20game%20on%20white%20background&width=200&height=200&seq=monopoly1&orientation=squarish' }
-          ]
-        }
-      }
-    }
-  };
-
-  // Handle quantity changes
-  const handleQuantityChange = (item, action) => {
-    const newCart = new Map(cart);
-    const currentQuantity = newCart.get(item.id)?.quantity || 0;
-
-    if (action === 'increase') {
-      newCart.set(item.id, { ...item, quantity: currentQuantity + 1 });
-    } else if (action === 'decrease' && currentQuantity > 0) {
-      if (currentQuantity === 1) {
-        newCart.delete(item.id);
-      } else {
-        newCart.set(item.id, { ...item, quantity: currentQuantity - 1 });
-      }
-    }
-
-    setCart(newCart);
-
-    // Auto-show cart when adding items on mobile
-    if (isMobile && action === 'increase' && !showCart) {
-      setShowCart(true);
-    }
-  };
-
-  // Clear cart
-  const clearCart = () => {
-    setCart(new Map());
-  };
-
-  // Send to kitchen
-  const sendToKitchen = () => {
-    if (!selectedTable) {
-      alert('Please select a table first');
-      return;
-    }
-    alert(`Order sent to Kitchen/Bar for ${selectedTable}`);
-    clearCart();
-    setSelectedTable(null);
-    if (isMobile) setShowCart(false);
-  };
-
-  // Calculate order totals
-  const calculateTotals = () => {
-    let subtotal = 0;
-    cart.forEach(item => {
-      subtotal += item.quantity * item.price;
-    });
-    const tax = subtotal * 0.08;
-    const total = subtotal + tax;
-    return { subtotal, tax, total };
-  };
-
-  // Open/close modal
-  const openNewOrderModal = () => setShowModal(true);
-  const closeNewOrderModal = () => setShowModal(false);
-
-  // Create new order
-  const createNewOrder = () => {
-    if (serviceType === 'dine-in' && !tableNumber) {
-      alert('Please select a table for dine-in service');
-      return;
-    }
-    if (!orderType) {
-      alert('Please select an order type');
-      return;
-    }
-    closeNewOrderModal();
-  };
-
-  // Get status badge class
-  const getStatusBadgeClass = (status) => {
-    switch (status) {
-      case 'available': return 'bg-primary bg-opacity-10 text-primary';
-      case 'occupied': return 'bg-warning bg-opacity-10 text-warning';
-      case 'reserved': return 'bg-danger bg-opacity-10 text-danger';
-      default: return 'bg-secondary bg-opacity-10 text-secondary';
-    }
-  };
-
-  // Get table type icon
-  const getTableTypeIcon = (type) => {
-    return type === 'game' ? <RiGamepadLine /> : <RiRestaurantLine />;
-  };
-
-  // Toggle category expansion
-  const toggleCategory = (category) => {
-    if (expandedCategory === category) {
-      setExpandedCategory(null);
-    } else {
-      setExpandedCategory(category);
-    }
-  };
-
-  const { subtotal, tax, total } = calculateTotals();
 
   return (
-    <div className="d-flex flex-column vh-100" style={{ overflowX: 'hidden' }}>
-      {/* Main Content */}
-      <div className="d-flex flex-column flex-grow-1 overflow-hidden">
-        {/* Header */}
-        <div className="p-3">
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-            <div className="">
-              <h1 className="fs-3 fw-bold text-dark">Orders Management</h1>
-            </div>
-            <div className="d-flex flex-wrap align-items-center gap-2 gap-md-3">
-              <div className="d-none d-md-flex gap-4 small text-muted">
-                <span className="d-flex align-items-center">
-                  <span className="d-inline-block rounded-circle bg-dark me-2" style={{ width: '8px', height: '8px' }}></span>
-                  Active Orders: 12
-                </span>
-                <span className="d-flex align-items-center">
-                  <span className="d-inline-block rounded-circle bg-warning me-2" style={{ width: '8px', height: '8px' }}></span>
-                  Pending KOTs: 3
-                </span>
-              </div>
-              <button className="btn btn-light d-flex align-items-center btn-sm">
-                <RiRefreshLine className="me-1 me-md-2" />
-                <span className="d-none d-md-inline">Refresh</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Panel */}
-        <div className="d-flex flex-column flex-md-row flex-grow-1 overflow-hidden position-relative">
-          {/* Menu Section */}
-          <div className={`flex-grow-1 p-3 overflow-auto ${showCart ? 'd-none d-md-block' : ''}`} style={{ scrollbarWidth: 'none' }}>
-            {/* Table Assignment Section */}
-            <div className="">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="h5 fw-semibold mb-0">Assign to Table</h2>
-                {isMobile && (
-                  <button
-                    className="btn btn-dark btn-sm d-flex align-items-center"
-                    onClick={() => setShowCart(true)}
-                  >
-                    <RiShoppingCartLine className="me-1" />
-                    {cart.size > 0 && <span className="badge bg-danger ms-1">{Array.from(cart.values()).reduce((acc, item) => acc + item.quantity, 0)}</span>}
-                  </button>
-                )}
-              </div>
-
-              {/* Food Category Tabs */}
-              <div className="d-flex gap-2">
-                <div className="d-flex justify-content-between align-items-center flex-wrap mb-3 w-100">
-                  {/* Left Side Buttons - Scrollable on mobile */}
-                  <div className="d-flex flex-nowrap overflow-auto gap-2 pb-2" style={{ scrollbarWidth: 'none' }}>
-                    <button className="btn btn-outline-secondary btn-sm flex-shrink-0">All Tables</button>
-                    <button className="btn btn-outline-secondary btn-sm flex-shrink-0">Pool</button>
-                    <button className="btn btn-outline-secondary btn-sm flex-shrink-0">Snooker</button>
-                    <button className="btn btn-outline-secondary btn-sm flex-shrink-0">PlayStation</button>
-                    <button className="btn btn-outline-secondary btn-sm flex-shrink-0">Restaurant</button>
-                  </div>
-
-                  {/* Right Side Filter Button - relative container */}
-                  <div className="position-relative ms-auto">
-                    <button
-                      className="btn btn-outline-secondary btn-sm d-flex align-items-center"
-                      onClick={() => setShowTableFilter(!showTableFilter)}
-                    >
-                      <RiFilterLine className="me-1" />
-                      <span className="d-none d-sm-inline">Filter</span>
-                    </button>
-
-                    {/* Dropdown aligned below the button */}
-                    {showTableFilter && (
-                      <div
-                        className="position-absolute mt-1 bg-white border rounded shadow p-2"
-                        style={{ zIndex: 3000, width: '180px', right: '0px' }}
-                      >
-                        {[
-                          { key: 'all', label: 'All Tables' },
-                          { key: 'available', label: 'Available' },
-                          { key: 'occupied', label: 'Occupied' },
-                          { key: 'reserved', label: 'Reserved' },
-                          { key: 'dining', label: 'Dining Tables' },
-                          { key: 'game', label: 'Game Tables' },
-                        ].map((option) => (
-                          <div
-                            key={option.key}
-                            className={`d-flex align-items-center p-2 rounded ${tableFilter === option.key ? 'bg-light' : ''}`}
-                            onClick={() => setTableFilter(option.key)}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            {tableFilter === option.key && <RiCheckLine className="me-2 text-primary" />}
-                            <span>{option.label}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-                {filteredTables.map(table => (
-                  <div key={table.id} className="col">
-                    <div
-                      className={`card h-100 ${selectedTable === table.id ? 'border-primary border-2' : ''}`}
-                      onClick={() => table.status !== 'reserved' && setSelectedTable(table.id)}
-                      style={{
-                        cursor: table.status === 'reserved' ? 'not-allowed' : 'pointer',
-                        opacity: table.status === 'reserved' ? 0.7 : 1
-                      }}
-                    >
-                      <div className="card-body p-3">
-                        <div className="d-flex justify-content-between align-items-start mb-2">
-                          <div>
-                            <h3 className="h6 fw-semibold mb-0">
-                              {table.name.split(' ')[0]} {table.name.split(' ')[1].charAt(0)}{table.name.split(' ')[1].slice(1).match(/\d+/)?.[0] || ''}
-                            </h3>
-                            <div className="d-flex align-items-center mt-1">
-                              <span className={`badge rounded-pill ${getStatusBadgeClass(table.status)}`}>
-                                {table.status.charAt(0).toUpperCase() + table.status.slice(1).substring(0, 3)}
-                              </span>
-                              <span className="ms-2 text-muted">
-                                {getTableTypeIcon(table.type)}
-                              </span>
-                            </div>
-                          </div>
-                          {selectedTable === table.id && (
-                            <span className="badge bg-primary rounded-circle p-1">
-                              <RiCheckLine size={12} />
-                            </span>
-                          )}
-                        </div>
-                        <p className="small text-muted mb-0">{table.details}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Search and Filters */}
-            <div className='mt-4'>
-              <h2 className="h5 fw-semibold mb-0">Order Menu</h2>
-            </div>
-            <div className="mt-3 mb-md-4 d-flex flex-column flex-md-row gap-2 gap-md-3">
-              <div className="position-relative flex-grow-1">
-                <div className="position-absolute top-50 start-0 translate-middle-y ps-3">
-                  <RiSearchLine />
-                </div>
-                <input
-                  type="text"
-                  className="form-control ps-5"
-                  placeholder="Search menu items..."
-                />
-              </div>
-              <div className="d-flex gap-2">
-                <button className="btn btn-outline-secondary btn-sm">Popular</button>
-                <button className="btn btn-outline-secondary btn-sm">Vegetarian</button>
-                <button className="btn btn-outline-secondary btn-sm d-none d-md-inline-block">Spicy</button>
-              </div>
-            </div>
-
-            {/* Category Tabs */}
-            <div className="mb-3">
-              <div className="btn-group w-100" role="group">
-                <button
-                  className={`btn btn-sm ${activeCategory === 'food' ? 'btn-warning' : 'btn-outline-secondary'}`}
-                  onClick={() => setActiveCategory('food')}
-                >
-                  <RiRestaurantLine className="me-1" />
-                  Food
-                </button>
-                <button
-                  className={`btn btn-sm ${activeCategory === 'drinks' ? 'btn-warning' : 'btn-outline-secondary'}`}
-                  onClick={() => setActiveCategory('drinks')}
-                >
-                  <RiCupLine className="me-1" />
-                  Drinks
-                </button>
-                <button
-                  className={`btn btn-sm ${activeCategory === 'games' ? 'btn-warning' : 'btn-outline-secondary'}`}
-                  onClick={() => setActiveCategory('games')}
-                >
-                  <RiGamepadLine className="me-1" />
-                  Games
-                </button>
-              </div>
-            </div>
-
-            {/* Menu Subcategories */}
-            <div className="mb-4">
-              <h5 className="fw-semibold mb-3">{menuCategories[activeCategory].name}</h5>
-
-              {/* Subcategory Navigation - Scrollable on mobile */}
-              <div className="d-flex flex-nowrap overflow-auto gap-2 mb-4 pb-2" style={{ scrollbarWidth: 'none' }}>
-                {Object.keys(menuCategories[activeCategory].subcategories).map(subKey => (
-                  <button
-                    key={subKey}
-                    className={`btn btn-sm flex-shrink-0 ${expandedCategory === subKey ? 'btn-warning' : 'btn-outline-secondary'}`}
-                    // onClick={() => toggleCategory(subKey)}
-                  >
-                    {menuCategories[activeCategory].subcategories[subKey].name}
-                  </button>
-                ))}
-              </div>
-
-              {/* Menu Items Grid */}
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 g-md-4">
-                {/* Show all items in the active category if no subcategory is expanded */}
-                {!expandedCategory && Object.values(menuCategories[activeCategory].subcategories).flatMap(subcategory =>
-                  subcategory.items.map(item => (
-                    <div key={item.id} className="col">
-                      <div className="card h-100">
-                        <div className="card-body p-3">
-                          <div className="d-flex justify-content-between align-items-start">
-                            <div>
-                              <h3 className="h6 fw-semibold mb-1">{item.name}</h3>
-                              <p className="small text-muted mb-2">{item.description}</p>
-                            </div>
-                            <span className="fw-semibold">${item.price.toFixed(2)}</span>
-                          </div>
-                          <div className="d-flex justify-content-end mt-3">
-                            <div className="d-flex align-items-center gap-2">
-                              <button
-                                className="btn btn-sm btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
-                                style={{ width: '28px', height: '28px' }}
-                                onClick={() => handleQuantityChange(item, 'decrease')}
-                              >
-                                <RiSubtractLine size={14} />
-                              </button>
-                              <span className="fw-medium" style={{ width: '24px', textAlign: 'center' }}>
-                                {cart.get(item.id)?.quantity || 0}
-                              </span>
-                              <button
-                                className="btn btn-sm btn-dark rounded-circle p-0 d-flex align-items-center justify-content-center"
-                                style={{ width: '28px', height: '28px' }}
-                                onClick={() => handleQuantityChange(item, 'increase')}
-                              >
-                                <RiAddLine size={14} />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-
-                {/* Show items from expanded subcategory */}
-                {expandedCategory && menuCategories[activeCategory].subcategories[expandedCategory]?.items?.map(item => (
-                  <div key={item.id} className="col">
-                    <div className="card h-100">
-                      <div className="card-body p-3">
-                        <div className="d-flex justify-content-between align-items-start">
-                          <div>
-                            <h3 className="h6 fw-semibold mb-1">{item.name}</h3>
-                            <p className="small text-muted mb-2">{item.description}</p>
-                          </div>
-                          <span className="fw-semibold">${item.price.toFixed(2)}</span>
-                        </div>
-                        <div className="d-flex justify-content-end mt-3">
-                          <div className="d-flex align-items-center gap-2">
-                            <button
-                              className="btn btn-sm btn-light rounded-circle p-0 d-flex align-items-center justify-content-center"
-                              style={{ width: '28px', height: '28px' }}
-                              onClick={() => handleQuantityChange(item, 'decrease')}
-                            >
-                              <RiSubtractLine size={14} />
-                            </button>
-                            <span className="fw-medium" style={{ width: '24px', textAlign: 'center' }}>
-                              {cart.get(item.id)?.quantity || 0}
-                            </span>
-                            <button
-                              className="btn btn-sm btn-dark rounded-circle p-0 d-flex align-items-center justify-content-center"
-                              style={{ width: '28px', height: '28px' }}
-                              onClick={() => handleQuantityChange(item, 'increase')}
-                            >
-                              <RiAddLine size={14} />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Cart Panel - Mobile (Bottom Sheet) */}
-          <div className={`d-md-none position-fixed bottom-0 start-0 end-0 bg-white rounded-top-3 shadow-lg ${showCart ? '' : 'translate-y-100'}`}
-            style={{
-              zIndex: 1050,
-              transition: 'transform 0.3s ease-in-out',
-              transform: showCart ? 'translateY(0)' : 'translateY(100%)',
-              maxHeight: '80vh'
-            }}>
-            <div className="p-3 border-bottom d-flex justify-content-between align-items-center">
-              <h5 className="mb-0 fw-semibold">Order Summary</h5>
-              <button className="btn btn-sm btn-outline-secondary" onClick={() => setShowCart(false)}>
-                <RiCloseLine />
-              </button>
-            </div>
-            <div className="p-3 overflow-auto" style={{ maxHeight: '60vh' }}>
-              {cart.size === 0 ? (
-                <div className="text-center text-muted py-4">
-                  <RiShoppingCartLine size={32} className="mb-2 text-muted" />
-                  <p>No items in cart</p>
-                </div>
-              ) : (
-                <div className="d-flex flex-column gap-2">
-                  {Array.from(cart.values()).map(item => (
-                    <div key={item.id} className="d-flex justify-content-between align-items-center py-2 border-bottom">
-                      <div className="flex-grow-1">
-                        <h6 className="fw-medium mb-0">{item.name}</h6>
-                        <p className="small text-muted mb-0">${item.price.toFixed(2)} × {item.quantity}</p>
-                      </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <span className="fw-semibold">${(item.price * item.quantity).toFixed(2)}</span>
-                        <button
-                          className="btn btn-sm btn-outline-danger p-0"
-                          style={{ width: '24px', height: '24px' }}
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          <RiCloseLine size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="p-3 border-top">
-              <div className="mb-2">
-                <div className="d-flex justify-content-between small mb-1">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="d-flex justify-content-between small mb-2">
-                  <span>Tax (8%)</span>
-                  <span>${tax.toFixed(2)}</span>
-                </div>
-                <div className="d-flex justify-content-between fw-semibold border-top pt-2">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
-              </div>
-              <div className="mb-3">
-                <label className="form-label small">Customer Name</label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Enter customer name"
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label small">Special Instructions</label>
-                <textarea
-                  className="form-control form-control-sm"
-                  rows="2"
-                  value={specialInstructions}
-                  onChange={(e) => setSpecialInstructions(e.target.value)}
-                  placeholder="Any special requests..."
-                ></textarea>
-              </div>
-              <button
-                className={`btn w-100 mb-2 ${cart.size === 0 ? 'btn-secondary disabled' : 'btn-dark'}`}
-                disabled={cart.size === 0}
-                onClick={sendOrder}
-              >
-                <RiPrinterLine className="me-2" />
-                Send Order
-              </button>
-              <button
-                className="btn btn-outline-secondary w-100"
-                onClick={clearCart}
-              >
-                Clear Cart
-              </button>
-            </div>
-          </div>
-
-          {/* Cart Panel - Desktop */}
-          <div className="d-none d-md-flex flex-column border-start bg-white" style={{ width: '350px', minWidth: '350px' }}>
-            <div className="p-4 border-bottom">
-              <h2 className="h5 fw-semibold mb-2">Order Summary</h2>
-              <div className="small text-muted">
-                <p>Table: <span className="fw-medium text-dark">{selectedTable || 'Not Selected'}</span></p>
-                <p>Time: <span className="fw-medium text-dark">{new Date().toLocaleTimeString()}</span></p>
-              </div>
-              <div className="mt-3">
-                <label className="form-label small">Customer Name</label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Enter customer name"
-                />
-              </div>
-              <div className="mt-2">
-                <label className="form-label small">Special Instructions</label>
-                <textarea
-                  className="form-control form-control-sm"
-                  rows="2"
-                  value={specialInstructions}
-                  onChange={(e) => setSpecialInstructions(e.target.value)}
-                  placeholder="Any special requests..."
-                ></textarea>
-              </div>
-            </div>
-            <div className="flex-grow-1 p-4 overflow-auto">
-              {cart.size === 0 ? (
-                <div className="text-center text-muted py-4"  style={{height: '1000px'}}>
-                  <RiShoppingCartLine size={48} className="mb-3 text-muted" />
-                  <p>No items in cart</p>
-                  <p className="small">Add items from menu</p>
-                </div>
-              ) : (
-                <div className="d-flex flex-column gap-3">
-                  {Array.from(cart.values()).map(item => (
-                    <div key={item.id} className="d-flex justify-content-between py-3 border-bottom">
-                      <div className="flex-grow-1">
-                        <h4 className="fw-medium">{item.name}</h4>
-                        <p className="small text-muted">${item.price.toFixed(2)} × {item.quantity}</p>
-                      </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <span className="fw-semibold">${(item.price * item.quantity).toFixed(2)}</span>
-                        <button
-                          className="btn btn-sm btn-outline-danger p-0"
-                          style={{ width: '24px', height: '24px' }}
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          <RiCloseLine size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="p-4 border-top">
-              <div className="mb-3">
-                <div className="d-flex justify-content-between small mb-1">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="d-flex justify-content-between small mb-2">
-                  <span>Tax (8%)</span>
-                  <span>${tax.toFixed(2)}</span>
-                </div>
-                <div className="d-flex justify-content-between fw-semibold border-top pt-2">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
-              </div>
-              <button
-                className={`btn w-100 mb-2 d-flex align-items-center justify-content-center ${cart.size === 0 ? 'btn-secondary disabled' : 'btn-dark'}`}
-                disabled={cart.size === 0}
-                onClick={sendOrder}
-              >
-                <RiPrinterLine className="me-2" />
-                Send Order
-              </button>
-              <button
-                className="btn btn-outline-secondary w-100"
-                onClick={clearCart}
-              >
-                Clear Cart
-              </button>
-            </div>
-          </div>
+    <div className="p-3">
+      <div>
+        <h1 className="fs-3 fw-bold text-dark">Order Management</h1>
+      </div>
+      {/* Top Navigation */}
+      <div className="mt-3 mb-3">
+        <div className="d-flex">
+          {['tables', 'register', 'orders'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`btn ${activeTab === tab ? 'btn-warning' : 'btn-light'} rounded-pill mx-1`}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
+
+      {/* Register Screen */}
+      {activeTab === 'register' && (
+        <div className="d-flex flex-column flex-md-row bg-white">
+          <div className="bg-white border-end border-gray-200 d-flex flex-column" style={{ height: '570px', width: '300px' }}>
+            {/* Customer Section */}
+            <div className="p-2 border-bottom border-gray-200">
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <h3 className="h6 mb-0">Current Order</h3>
+                <span className="text-muted small">Table 5</span>
+              </div>
+              <div className="d-flex gap-2">
+                <button
+                  onClick={() => setIsCustomerModalOpen(true)}
+                  className="btn btn-light flex-grow-1 text-start btn-sm"
+                >
+                  <i className="fa fa-user me-2"></i>Customer
+                </button>
+                <button
+                  onClick={() => setIsNoteModalOpen(true)}
+                  className="btn btn-light flex-grow-1 text-start btn-sm"
+                >
+                  <i className="fa fa-sticky-note me-2"></i>Note
+                </button>
+              </div>
+            </div>
+
+            {/* Middle Section: Scrollable Order Items + Calculator */}
+            <div className="flex-grow-1 d-flex flex-column overflow-hidden">
+              {/* Order Items */}
+              <div className="flex-grow-1 p-2" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                <div className="d-flex flex-column gap-2">
+                  {orderItems.map((item) => (
+                    <div key={item.id} className="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                      <div className="flex-grow-1">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span className="fw-semibold small">{item.name}</span>
+                          <div className="d-flex align-items-center gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOrderItems(orderItems.filter(orderItem => orderItem.id !== item.id));
+                              }}
+                              className="btn btn-link text-danger p-0"
+                            >
+                              <i className="fa fa-times small"></i>
+                            </button>
+                            <span className="text-muted small">${(item.price * item.quantity).toFixed(2)}</span>
+                          </div>
+                        </div>
+                        <div className="d-flex align-items-center mt-1">
+                          <span className="text-muted small">Qty: {item.quantity}</span>
+                          <span className="text-muted small ms-2">${item.price.toFixed(2)} each</span>
+                        </div>
+                        {item.sides && item.sides.length > 0 && (
+                          <div className="mt-1">
+                            {item.sides.map((side) => (
+                              <div key={side.id} className="d-flex justify-content-between small text-muted">
+                                <span>+ {side.name}</span>
+                                <span>${side.price.toFixed(2)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+
+              {/* Calculator + Total */}
+              <div className="p-2 border-top border-gray-200">
+                {/* Calculator Display */}
+                <div className="bg-light p-2 rounded mb-2">
+                  <div className="text-end fs-4 font-monospace mb-1">
+                    ${calculateTotal().toFixed(2)}
+                  </div>
+                  <div className="text-end small text-muted">
+                    Subtotal: ${calculateSubtotal().toFixed(2)} + Tax: ${calculateTax().toFixed(2)}
+                  </div>
+                </div>
+
+                {/* Calculator Keypad */}
+                <div className="d-grid gap-1 mb-2" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+                  {['7', '8', '9', '÷', '4', '5', '6', '×', '1', '2', '3', '-', 'C', '0', '.', '+'].map((key) => (
+                    <button
+                      key={key}
+                      className={`btn btn-sm fw-bold p-1 ${key === 'C' ? 'btn-danger' : ['÷', '×', '-', '+'].includes(key) ? 'btn-info' : 'btn-light'}`}
+                      style={{ height: '30px', fontSize: '12px', lineHeight: '12px' }}
+                    >
+                      {key}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Total Display */}
+                <div className="d-flex justify-content-between border-top border-gray-200 pt-2 mb-2">
+                  <span className="fw-semibold small">Total</span>
+                  <span className="fw-semibold small">${calculateTotal().toFixed(2)}</span>
+                </div>
+
+                {/* Order Type & Course */}
+                <div className="d-flex gap-2 mb-2">
+                  <button
+                    onClick={() => {
+                      const types = ['dineIn', 'takeOut', 'delivery'];
+                      const currentIndex = types.indexOf(orderType);
+                      const nextIndex = (currentIndex + 1) % types.length;
+                      setOrderType(types[nextIndex]);
+                    }}
+                    className={`btn btn-sm flex-grow-1 ${orderType === 'dineIn' ? 'btn-warning' :
+                      orderType === 'takeOut' ? 'btn-success' : 'btn-purple'
+                      }`}
+                  >
+                    <i className={`fa ${orderType === 'dineIn' ? 'fa-cutlery' :
+                      orderType === 'takeOut' ? 'fa-shopping-bag' : 'fa-motorcycle'
+                      } me-2 small`}></i>
+                    {orderType === 'dineIn' ? 'Dine In' : orderType === 'takeOut' ? 'Take Out' : 'Delivery'}
+                  </button>
+
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-light btn-sm w-100 d-flex align-items-center justify-content-center"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span className="small">Course</span>
+                      <i className="fa fa-chevron-down ms-2 small"></i>
+                    </button>
+                    <ul className="dropdown-menu w-100 shadow border">
+                      {['Appetizer', 'Main Course', 'Dessert', 'All at Once'].map((course) => (
+                        <li key={course}>
+                          <button
+                            className="dropdown-item small text-muted"
+                            onClick={() => console.log(`Selected: ${course}`)}
+                          >
+                            {course}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button
+                    onClick={() => setIsActionsModalOpen(true)}
+                    className="btn btn-light btn-sm"
+                  >
+                    <i className="fas fa-ellipsis-vertical small"></i>
+                  </button>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="d-flex gap-2">
+                  <button
+                    onClick={() => {
+                      setActiveTab('tables');
+                      setSelectedTable(null);
+                      setOrderItems([]);
+                    }}
+                    className="btn btn-dark btn-sm flex-grow-1"
+                  >
+                    New
+                  </button>
+                  <button
+                    onClick={() => setOrderItems([])}
+                    className="btn btn-danger btn-sm flex-grow-1"
+                  >
+                    <i className="fa fa-trash me-1 small"></i>Clear
+                  </button>
+                  <button className="btn btn-warning btn-sm flex-grow-1">
+                    <i className="fa fa-credit-card me-1 small"></i>Pay
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - Product Selection */}
+          <div className="flex-grow-1 d-flex flex-column">
+            {/* Search Bar */}
+            <div className="p-3 bg-white border-bottom border-gray-200">
+              <div className="position-relative">
+                {/* Input with padding-left to avoid overlap with icon */}
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="form-control"
+                />
+              </div>
+            </div>
+
+            {/* Category Switcher */}
+            <div className="p-3 bg-white border-bottom border-gray-200">
+              <div className="d-flex gap-2">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`btn ${selectedCategory === category.id ? 'btn-warning' : 'btn-light'}`}
+                  >
+                    <i className={`${category.icon} me-2`}></i>
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Product Grid */}
+            <div className="flex-grow-1 p-3 bg-light overflow-auto">
+              <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setIsSidesModalOpen(true);
+                    }}
+                    className="col"
+                  >
+                    <div className="card h-100 cursor-pointer hover-shadow">
+                      {/* <div className="ratio ratio-1x1">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="card-img-top object-fit-cover"
+                        />
+                      </div> */}
+                      <div className="card-body text-center">
+                        <h5 className="card-title mb-1">{product.name}</h5>
+                        <p className="h5 text-warning mb-0">${product.price.toFixed(2)}</p>
+                        <p className="small text-muted mt-1">
+                          <i className="fa fa-plus-circle mr-1"></i>
+                          Select options
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tables Screen */}
+      {activeTab === 'tables' && (
+        <div className="d-flex flex-column flex-md-row h-100">
+          <TableManagement />
+        </div>
+      )}
+
+      {/* Orders Screen */}
+      {activeTab === 'orders' && (
+        <div className="p-4">
+          <div className="card text-center">
+            <div className="card-body py-5">
+              <i className="fa fa-receipt text-muted fs-1 mb-3"></i>
+              <h2 className="h4 card-title mb-2">Orders Management</h2>
+              <p className="card-text text-muted">Order management functionality will be implemented here.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modals */}
+      {/* Customer Modal */}
+      {isCustomerModalOpen && (
+        <>
+          {/* Modal Backdrop */}
+          <div className="modal-backdrop fade show"></div>
+
+          {/* Modal Dialog */}
+          <div
+            className="modal fade show d-block"
+            tabIndex="-1"
+            role="dialog"
+            aria-labelledby="customerModalLabel"
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="customerModalLabel">Customer Information</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setIsCustomerModalOpen(false)}
+                  ></button>
+                </div>
+
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label htmlFor="customerName" className="form-label">Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="customerName"
+                      value={customerInfo.name}
+                      onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
+                      placeholder="Enter customer name"
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="customerPhone" className="form-label">Phone Number</label>
+                    <input
+                      type="tel"
+                      className="form-control"
+                      id="customerPhone"
+                      value={customerInfo.phone}
+                      onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                      placeholder="Enter phone number"
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="customerRequests" className="form-label">Special Requests</label>
+                    <textarea
+                      className="form-control"
+                      id="customerRequests"
+                      rows={3}
+                      value={customerInfo.specialRequests}
+                      onChange={(e) => setCustomerInfo({ ...customerInfo, specialRequests: e.target.value })}
+                      placeholder="Enter any special requests"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setIsCustomerModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-warning"
+                    onClick={() => {
+                      // Add your save logic here
+                      setIsCustomerModalOpen(false);
+                    }}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+
+      {/* Note Modal */}
+      {isNoteModalOpen && (
+        <>
+          {/* Modal Backdrop */}
+          <div className="modal-backdrop fade show"></div>
+
+          {/* Modal */}
+          <div
+            className="modal fade show d-block"
+            tabIndex="-1"
+            role="dialog"
+            aria-labelledby="orderNotesModalLabel"
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="orderNotesModalLabel">Order Notes</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setIsNoteModalOpen(false)}
+                  ></button>
+                </div>
+
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label htmlFor="orderNotes" className="form-label">Special Instructions</label>
+                    <textarea
+                      className="form-control"
+                      id="orderNotes"
+                      rows={6}
+                      value={orderNote}
+                      onChange={(e) => setOrderNote(e.target.value)}
+                      placeholder="Enter cooking preferences, allergies, or special requests..."
+                      maxLength={500}
+                    ></textarea>
+                    <div className="text-end small text-muted mt-1">
+                      {orderNote.length}/500 characters
+                    </div>
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setIsNoteModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-warning"
+                    onClick={() => {
+                      // Save logic goes here
+                      setIsNoteModalOpen(false);
+                    }}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+
+      {/* Sides Selection Modal */}
+      {isSidesModalOpen && selectedProduct && (
+        <>
+          {/* Modal Backdrop */}
+          <div className="modal-backdrop fade show"></div>
+
+          {/* Modal Dialog */}
+          <div
+            className="modal fade show d-block"
+            tabIndex="-1"
+            role="dialog"
+            aria-labelledby="sidesModalLabel"
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <div>
+                    <h5 className="modal-title" id="sidesModalLabel">{selectedProduct.name}</h5>
+                    <div className="small text-muted">
+                      ${selectedProduct.price.toFixed(2)} (+ VAT: 5% DU)
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => {
+                      setIsSidesModalOpen(false);
+                      setSelectedProduct(null);
+                      setSelectedSides([]);
+                    }}
+                  ></button>
+                </div>
+
+                <div className="modal-body">
+                  <h6 className="mb-3">Sides</h6>
+                  <div className="row row-cols-2 g-3">
+                    {selectedProduct?.sides?.map((side) => (
+                      <div key={side.id} className="col">
+                        <button
+                          type="button"
+                          onClick={() => handleSideToggle(side)}
+                          className={`btn w-100 p-3 ${selectedSides.find((s) => s.id === side.id)
+                            ? 'btn-outline-warning active'
+                            : 'btn-outline-secondary'
+                            }`}
+                        >
+                          <div className="d-flex flex-column align-items-center">
+                            <span className="fw-bold">{side.name}</span>
+                          </div>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setIsSidesModalOpen(false);
+                      setSelectedProduct(null);
+                      setSelectedSides([]);
+                    }}
+                  >
+                    Discard
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-warning"
+                    onClick={handleAddWithSides}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Actions Modal */}
+      {isActionsModalOpen && (
+        <>
+          {/* Modal Backdrop */}
+          <div className="modal-backdrop fade show"></div>
+
+          <div
+            className="modal fade show d-block"
+            tabIndex="-1"
+            role="dialog"
+            aria-labelledby="actionsModalLabel"
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-lg" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="actionsModalLabel">Actions</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setIsActionsModalOpen(false)}
+                  ></button>
+                </div>
+
+                <div className="modal-body">
+                  <div className="row row-cols-3 g-3">
+                    {[
+                      {
+                        icon: 'fa-sticky-note',
+                        text: 'Customer Note',
+                        onClick: () => setIsNoteModalOpen(true),
+                      },
+                      {
+                        icon: 'fa-file-invoice',
+                        text: 'Bill',
+                        onClick: () => setActiveTab('orders'),
+                      },
+                      {
+                        icon: 'fa-users',
+                        text: 'Guests',
+                        onClick: () => setIsCustomerModalOpen(true),
+                      },
+                      {
+                        icon: 'fa-percentage',
+                        text: 'Split',
+                        onClick: () => {
+                          const total = calculateTotal();
+                          const splitAmount = (total / 2).toFixed(2);
+                          alert(`Split amount per person: $${splitAmount}`);
+                        },
+                      },
+                      {
+                        icon: 'fa-exchange-alt',
+                        text: 'Transfer / Merge',
+                        onClick: () => {
+                          const tables = document.querySelectorAll('[id^="table-"]');
+                          tables.forEach((table) =>
+                            table.classList.add('table-highlight')
+                          );
+                          setTimeout(() => {
+                            tables.forEach((table) =>
+                              table.classList.remove('table-highlight')
+                            );
+                          }, 2000);
+                        },
+                      },
+                      {
+                        icon: 'fa-sync',
+                        text: 'Transfer course',
+                        onClick: () => {
+                          const courseDropdown =
+                            document.getElementById('courseDropdown');
+                          if (courseDropdown) {
+                            courseDropdown.classList.remove('d-none');
+                          }
+                        },
+                      },
+                      {
+                        icon: 'fa-list',
+                        text: 'Pricelist',
+                        onClick: () => {
+                          setSelectedCategory('food');
+                          setSearchTerm('');
+                        },
+                      },
+                      {
+                        icon: 'fa-undo',
+                        text: 'Refund',
+                        onClick: () => {
+                          const confirmRefund = window.confirm(
+                            'Are you sure you want to refund this order?'
+                          );
+                          if (confirmRefund) {
+                            // Refund logic here
+                          }
+                        },
+                      },
+                      {
+                        icon: 'fa-receipt',
+                        text: 'Tax',
+                        onClick: () => {
+                          const taxAmount = calculateTax();
+                          alert(`Tax Amount: $${taxAmount.toFixed(2)}`);
+                        },
+                      },
+                    ].map((action, index) => (
+                      <div key={index} className="col">
+                        <button
+                          onClick={() => {
+                            action.onClick();
+                            setIsActionsModalOpen(false);
+                          }}
+                          className="btn btn-light w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3"
+                        >
+                          <i className={`fa ${action.icon} fs-4 mb-2 text-muted`}></i>
+                          <span className="small">{action.text}</span>
+                        </button>
+                      </div>
+                    ))}
+
+                    <div className="col-6">
+                      <button
+                        onClick={() => setIsActionsModalOpen(false)}
+                        className="btn btn-outline-danger w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3"
+                      >
+                        <i className="fa fa-times-circle fs-4 mb-2"></i>
+                        <span className="small">Cancel Order</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+
     </div>
   );
 };
